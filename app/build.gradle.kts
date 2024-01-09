@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.practicafacturas"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.practicafacturas"
@@ -33,6 +33,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    viewBinding{
+        enable=true
+    }
 }
 
 dependencies {
@@ -44,4 +48,10 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // Implementación de cardView
+    implementation ("androidx.cardview:cardview:1.0.0")
+    // Implementación librería retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // Dependencias para room
 }
