@@ -29,6 +29,7 @@ class FilterActivity : AppCompatActivity() {
         return true
     }
 
+
     // Funcionalidad del menu para ir a la actividad principal sin hacer nada
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
