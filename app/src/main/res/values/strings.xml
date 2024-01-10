@@ -23,6 +23,9 @@
     <string name="txt_desde">Desde:</string>
     <string name="txt_hasta">Hasta:</string>
 
+    <!-- FilterActivity slider -->
+    <string name="txt_min_valor_slider">0</string>
+
     <!-- FilterActivity checkboxes -->
     <string name="chBox_pagadas">Pagadas</string>
     <string name="chBox_anuladas">Anuladas</string>

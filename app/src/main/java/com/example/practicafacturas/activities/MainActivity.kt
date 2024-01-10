@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: BillAdapter
     private lateinit var lista: MutableList<Bill>
+    private var maxImporte: Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,6 +30,12 @@ class MainActivity : AppCompatActivity() {
         // Llenar con la lista del provider
         lista = mutableListOf()
         lista = BillProvider.lista
+        // Si la lista está vacía hacer visible el textView que lo indica
+        if (lista.isEmpty()) {
+            binding.tvVacio.visibility = View.VISIBLE
+        }else {
+            binding.tvVacio.visibility = View.GONE
+        }
 
         // Configurar la toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -50,21 +58,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.rvFacturas.adapter = adapter
 
-        // TODO: Hacer que si la lista está vacia muestre el textView de lista vacía
-        /*
-        val recyclerView: RecyclerView = findViewById(R.id.rvPaises)
-        val textViewListaVacia: TextView = findViewById(R.id.textViewListaVacia)
-
-        // Tu lógica para llenar el RecyclerView
-
-        if (miListaDeElementos.isEmpty()) {
-            // Si la lista está vacía, muestra el TextView
-            textViewListaVacia.visibility = View.VISIBLE
-        } else {
-            // Si la lista no está vacía, oculta el TextView
-            textViewListaVacia.visibility = View.GONE
-        }
-         */
+        // Calcular el máximo importe de la lista
+        maxImporte = obtenerMayorImporte()
     }
 
     // Funcion alertDialog al pulsar en una factura
@@ -91,10 +86,21 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.filtros_menu -> {
                 val intent = Intent(this, FilterActivity::class.java)
+                intent.putExtra("maxImporte", maxImporte)
                 startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    // Funcion para obtener el mayor importe de la lista
+    private fun obtenerMayorImporte(): Double {
+        var importeMaximo: Double = 0.0
+        for (factura in lista) {
+            val facturaActual = factura.importeOrdenacion
+            if(importeMaximo < facturaActual) importeMaximo = facturaActual
+        }
+        return  importeMaximo
     }
 }
