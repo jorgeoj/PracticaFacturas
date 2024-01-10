@@ -20,7 +20,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonAplicar"
+        app:layout_constraintBottom_toTopOf="@+id/btnAplicar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/includeFilterActivity">
@@ -73,13 +73,143 @@
                 app:layout_constraintStart_toStartOf="@+id/tvDesde"
                 app:layout_constraintTop_toBottomOf="@+id/tvDesde" />
 
+            <Button
+                android:id="@+id/btnFechaHasta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/light_grey"
+                android:text="@string/btn_fecha"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black"
+                app:layout_constraintStart_toStartOf="@+id/tvHasta"
+                app:layout_constraintTop_toBottomOf="@+id/tvHasta" />
+
+            <!-- View como linea separadora -->
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/light_grey"
+                app:layout_constraintTop_toBottomOf="@+id/btnFechaDesde" />
+
+            <TextView
+                android:id="@+id/tvImporteTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/titulo_importe"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tvFechaEmision"
+                app:layout_constraintTop_toTopOf="@+id/view" />
+
+            <TextView
+                android:id="@+id/tvMinSlider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="val min"
+                app:layout_constraintStart_toStartOf="@+id/tvImporteTitulo"
+                app:layout_constraintTop_toBottomOf="@+id/tvImporteTitulo" />
+
+            <TextView
+                android:id="@+id/tvValorActual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Val slider"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMinSlider"
+                app:layout_constraintEnd_toStartOf="@+id/tvMaxSlider"
+                app:layout_constraintStart_toEndOf="@+id/tvMinSlider"
+                app:layout_constraintTop_toTopOf="@+id/tvMaxSlider" />
+
+            <TextView
+                android:id="@+id/tvMaxSlider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="val max"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMinSlider"
+                app:layout_constraintEnd_toEndOf="@+id/btnFechaHasta"
+                app:layout_constraintTop_toTopOf="@+id/tvMinSlider" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/slider"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="@+id/tvMaxSlider"
+                app:layout_constraintStart_toStartOf="@+id/tvMinSlider"
+                app:layout_constraintTop_toBottomOf="@+id/tvMinSlider" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/light_grey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/slider" />
+
+            <TextView
+                android:id="@+id/tvEstadoTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/titulo_estado"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tvFechaEmision"
+                app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+            <CheckBox
+                android:id="@+id/cbPagadas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/chBox_pagadas"
+                app:layout_constraintStart_toStartOf="@+id/tvEstadoTitulo"
+                app:layout_constraintTop_toBottomOf="@+id/tvEstadoTitulo" />
+
+            <CheckBox
+                android:id="@+id/cbAnuladas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chBox_anuladas"
+                app:layout_constraintStart_toStartOf="@+id/cbPagadas"
+                app:layout_constraintTop_toBottomOf="@+id/cbPagadas" />
+
+            <CheckBox
+                android:id="@+id/cbCuotaFija"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chBox_cFija"
+                app:layout_constraintStart_toStartOf="@+id/cbAnuladas"
+                app:layout_constraintTop_toBottomOf="@+id/cbAnuladas" />
+
+            <CheckBox
+                android:id="@+id/cbPendientesPago"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chBox_pendientePago"
+                app:layout_constraintStart_toStartOf="@+id/cbCuotaFija"
+                app:layout_constraintTop_toBottomOf="@+id/cbCuotaFija" />
+
+            <CheckBox
+                android:id="@+id/cbPlanPago"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chBox_planPago"
+                app:layout_constraintStart_toStartOf="@+id/cbPendientesPago"
+                app:layout_constraintTop_toBottomOf="@+id/cbPendientesPago" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
 
     <!-- Botones de aplicar y eliminar filtros -->
     <Button
-        android:id="@+id/buttonAplicar"
+        android:id="@+id/btnAplicar"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="48dp"
@@ -88,12 +218,12 @@
         android:text="@string/btn_aplicar"
         android:textColor="@color/white"
         android:backgroundTint="@color/green"
-        app:layout_constraintBottom_toTopOf="@+id/buttonEliminarFiltros"
+        app:layout_constraintBottom_toTopOf="@+id/btnEliminar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonEliminarFiltros"
+        android:id="@+id/btnEliminar"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -102,7 +232,7 @@
         android:textAllCaps="false"
         android:textColor="@color/dark_grey"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/buttonAplicar"
-        app:layout_constraintStart_toStartOf="@+id/buttonAplicar"/>
+        app:layout_constraintEnd_toEndOf="@+id/btnAplicar"
+        app:layout_constraintStart_toStartOf="@+id/btnAplicar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

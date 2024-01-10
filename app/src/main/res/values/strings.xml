@@ -17,7 +17,7 @@
     <!-- FilterActivity titulos -->
     <string name="titulo_fecha_emision">Con fecha de emisión</string>
     <string name="titulo_importe">Por un importe</string>
-    <string name="titulo_estado">Por un importe</string>
+    <string name="titulo_estado">Por estado</string>
 
     <!-- FilterActivity textViews -->
     <string name="txt_desde">Desde:</string>
