@@ -20,7 +20,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: BillAdapter
-    private lateinit var lista: MutableList<Bill>
+    private lateinit var listaOriginal: MutableList<Bill>
+    private lateinit var listaFiltrada: MutableList<Bill> // TODO usar esta lista para cambiarla y no tocar la otra (tambien habra que pasarla a la otra actividad)
     private var maxImporte: Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +29,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Llenar con la lista del provider
-        lista = mutableListOf()
-        lista = BillProvider.lista
+        listaOriginal = mutableListOf()
+        listaOriginal = BillProvider.lista
         // Si la lista está vacía hacer visible el textView que lo indica
-        if (lista.isEmpty()) {
+        if (listaOriginal.isEmpty()) {
             binding.tvVacio.visibility = View.VISIBLE
         }else {
             binding.tvVacio.visibility = View.GONE
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.mainActivity_titulo)
 
-        adapter = BillAdapter(lista){ factura ->
+        adapter = BillAdapter(listaOriginal){ factura ->
             onItemSelected(factura)
         }
 
@@ -96,8 +97,8 @@ class MainActivity : AppCompatActivity() {
 
     // Funcion para obtener el mayor importe de la lista
     private fun obtenerMayorImporte(): Double {
-        var importeMaximo: Double = 0.0
-        for (factura in lista) {
+        var importeMaximo = 0.0
+        for (factura in listaOriginal) {
             val facturaActual = factura.importeOrdenacion
             if(importeMaximo < facturaActual) importeMaximo = facturaActual
         }

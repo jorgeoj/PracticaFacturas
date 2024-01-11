@@ -2,7 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.PracticaFacturas" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorSecondary">@color/green</item>
     </style>
 
     <style name="Theme.PracticaFacturas" parent="Base.Theme.PracticaFacturas" />

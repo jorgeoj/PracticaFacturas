@@ -118,6 +118,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Val slider"
+                android:textColor="@color/green"
                 app:layout_constraintBottom_toBottomOf="@+id/tvMinSlider"
                 app:layout_constraintEnd_toStartOf="@+id/tvMaxSlider"
                 app:layout_constraintStart_toEndOf="@+id/tvMinSlider"
@@ -132,9 +133,9 @@
                 app:layout_constraintEnd_toEndOf="@+id/btnFechaHasta"
                 app:layout_constraintTop_toTopOf="@+id/tvMinSlider" />
 
-            <com.google.android.material.slider.Slider
+            <SeekBar
                 android:id="@+id/slider"
-                android:layout_width="320dp"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="@+id/tvMaxSlider"
@@ -217,7 +218,6 @@
         android:layout_marginBottom="8dp"
         android:text="@string/btn_aplicar"
         android:textColor="@color/white"
-        android:backgroundTint="@color/green"
         app:layout_constraintBottom_toTopOf="@+id/btnEliminar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

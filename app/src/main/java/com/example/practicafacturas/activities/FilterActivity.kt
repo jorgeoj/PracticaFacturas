@@ -4,8 +4,11 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.SeekBar
 import androidx.appcompat.widget.Toolbar
 import com.example.practicafacturas.R
 import com.example.practicafacturas.databinding.ActivityFilterBinding
@@ -15,6 +18,10 @@ import java.util.Date
 class FilterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFilterBinding
+    // TODO valores para filtrar la lista
+    private lateinit var fechaInicio: String
+    private lateinit var fechaFin: String
+    private var valorImporte: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFilterBinding.inflate(layoutInflater)
@@ -28,15 +35,19 @@ class FilterActivity : AppCompatActivity() {
         // Obtenemos los datos al pasar de una actividad a otra
         var maxImporte = intent.getDoubleExtra("maxImporte", 0.0)
 
-        // Valores de los textView para el slider
-        binding.tvMinSlider.setText(R.string.txt_min_valor_slider)
-        binding.tvMaxSlider.text = maxImporte.toString()
-        //TODO mirar como poner valor maximo al slider
+        // Funcionalidad botones de fecha
+        binding.btnFechaDesde.setOnClickListener { obtenerFecha(binding.btnFechaDesde) }
+        binding.btnFechaHasta.setOnClickListener { obtenerFecha(binding.btnFechaHasta) }
 
-        // Funcionalidad boton fecha inicial
-        binding.btnFechaDesde.setOnClickListener { obtenerFechaInicio() }
+        // Valores de los textView para el slider y cosas del slider
+        binding.tvMinSlider.text = "${getString(R.string.txt_min_valor_slider)} €"
+        binding.tvMaxSlider.text = "${(maxImporte.toInt() + 1)} €"
+        binding.tvValorActual.text = "${getString(R.string.txt_min_valor_slider)} €"
+        controlarSlider(maxImporte)
+
 
         // TODO Funcion al darle al botón de aplicar los filtros
+        binding.btnAplicar.setOnClickListener { filtrarValores() }
 
         // Funcionalidad al darle al boton de eliminar filtros
         binding.btnEliminar.setOnClickListener { eliminarValores() }
@@ -61,18 +72,42 @@ class FilterActivity : AppCompatActivity() {
         }
     }
 
-    private fun obtenerFechaInicio() {
+    private fun obtenerFecha(btnFecha: Button) {
         val calendario = Calendar.getInstance()
         val anyo = calendario.get(Calendar.YEAR)
         val mes = calendario.get(Calendar.MONTH) + 1
         val dia = calendario.get(Calendar.DAY_OF_MONTH)
         val datePickerDialog = DatePickerDialog(this,
             { view, year1, month, dayOfMonth ->
-                binding.btnFechaDesde.text = "$dayOfMonth/${month + 1}/$year1"
+                btnFecha.text = "$dayOfMonth/${month + 1}/$year1"
             }, anyo, mes, dia)
 
         datePickerDialog.datePicker.maxDate = Date().time
         datePickerDialog.show()
+    }
+
+    private fun controlarSlider(maxImporte: Double) {
+        binding.slider.min = 0
+        binding.slider.max = maxImporte.toInt() + 1
+        binding.slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                binding.tvValorActual.text = "${progress} €"
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                Log.d("onStartTrackingTouch", "onStartTrackingTouch: ha fallado")
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Log.d("onStopTrackingTouch", "onStopTrackingTouch: ha fallado")
+            }
+        })
+    }
+
+    //
+    private fun filtrarValores() {
+        // TODO aun hay que implementar el pasar los datos para filtrar
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 
     // Función que restablece los filtros
@@ -82,7 +117,7 @@ class FilterActivity : AppCompatActivity() {
         binding.btnFechaHasta.setText(R.string.btn_fecha)
 
         // Restablecer valor del slider
-        binding.slider.value = 1.0f
+        binding.slider.setProgress(1, true)
 
         // Restablecer valores de las checkBox
         binding.cbPagadas.isChecked = false
