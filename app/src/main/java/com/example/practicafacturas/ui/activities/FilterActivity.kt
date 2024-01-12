@@ -1,4 +1,4 @@
-package com.example.practicafacturas.activities
+package com.example.practicafacturas.ui.activities
 
 import android.app.DatePickerDialog
 import android.content.Intent

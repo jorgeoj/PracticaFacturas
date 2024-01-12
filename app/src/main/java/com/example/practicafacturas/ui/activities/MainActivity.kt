@@ -1,13 +1,16 @@
-package com.example.practicafacturas.activities
+package com.example.practicafacturas.ui.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practicafacturas.Bill
@@ -15,13 +18,17 @@ import com.example.practicafacturas.R
 import com.example.practicafacturas.adapter.BillAdapter
 import com.example.practicafacturas.adapter.BillProvider
 import com.example.practicafacturas.databinding.ActivityMainBinding
+import com.example.practicafacturas.model.Invoice
+import com.example.practicafacturas.ui.adapter.InvoiceAdapter
+import com.example.practicafacturas.viewmodel.InvoiceViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: BillAdapter
-    private lateinit var listaOriginal: MutableList<Bill>
-    private lateinit var listaFiltrada: MutableList<Bill> // TODO usar esta lista para cambiarla y no tocar la otra (tambien habra que pasarla a la otra actividad)
+    private lateinit var invoiceAdapter: InvoiceAdapter
+    //private lateinit var listaOriginal: MutableList<Bill>
     private var maxImporte: Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,23 +36,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Llenar con la lista del provider
-        listaOriginal = mutableListOf()
-        listaOriginal = BillProvider.lista
+        //listaOriginal = mutableListOf()
+        //listaOriginal = BillProvider.lista
+
         // Si la lista está vacía hacer visible el textView que lo indica
-        if (listaOriginal.isEmpty()) {
+        /*if (listaOriginal.isEmpty()) {
             binding.tvVacio.visibility = View.VISIBLE
         }else {
             binding.tvVacio.visibility = View.GONE
-        }
+        }*/
 
         // Configurar la toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.mainActivity_titulo)
 
-        adapter = BillAdapter(listaOriginal){ factura ->
-            onItemSelected(factura)
-        }
+        invoiceAdapter = InvoiceAdapter()
+        initViewModel()
+        initMainViewModel()
 
         val layoutManager = LinearLayoutManager(this)
         binding.rvFacturas.layoutManager = layoutManager
@@ -57,10 +65,34 @@ class MainActivity : AppCompatActivity() {
         )
         binding.rvFacturas.addItemDecoration(dividerItemDecoration)
 
-        binding.rvFacturas.adapter = adapter
+        // binding.rvFacturas.adapter = adapter
 
         // Calcular el máximo importe de la lista
-        maxImporte = obtenerMayorImporte()
+        // TODO arreglar esto
+        // maxImporte = obtenerMayorImporte()
+    }
+
+
+
+    private fun initViewModel() {
+        binding.rvFacturas.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            invoiceAdapter = InvoiceAdapter()
+            adapter = invoiceAdapter
+        }
+    }
+
+    private fun initMainViewModel() {
+        val viewModel = ViewModelProvider(this).get(InvoiceViewModel::class.java)
+        viewModel.getAllRepositoryList().observe(this, Observer<List<Invoice>>{
+            invoiceAdapter.setListInvoices(it)
+            invoiceAdapter.notifyDataSetChanged()
+
+            if (it.isEmpty()) {
+                viewModel.makeApiCall()
+                Log.d("Datos", it.toString())
+            }
+        })
     }
 
     // Funcion alertDialog al pulsar en una factura
@@ -96,6 +128,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Funcion para obtener el mayor importe de la lista
+    /*
     private fun obtenerMayorImporte(): Double {
         var importeMaximo = 0.0
         for (factura in listaOriginal) {
@@ -103,5 +136,5 @@ class MainActivity : AppCompatActivity() {
             if(importeMaximo < facturaActual) importeMaximo = facturaActual
         }
         return  importeMaximo
-    }
+    }*/
 }
