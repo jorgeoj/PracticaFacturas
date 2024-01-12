@@ -13,10 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.practicafacturas.Bill
 import com.example.practicafacturas.R
-import com.example.practicafacturas.adapter.BillAdapter
-import com.example.practicafacturas.adapter.BillProvider
 import com.example.practicafacturas.databinding.ActivityMainBinding
 import com.example.practicafacturas.model.Invoice
 import com.example.practicafacturas.ui.adapter.InvoiceAdapter
@@ -28,30 +25,20 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var invoiceAdapter: InvoiceAdapter
-    //private lateinit var listaOriginal: MutableList<Bill>
     private var maxImporte: Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Llenar con la lista del provider
-        //listaOriginal = mutableListOf()
-        //listaOriginal = BillProvider.lista
-
-        // Si la lista está vacía hacer visible el textView que lo indica
-        /*if (listaOriginal.isEmpty()) {
-            binding.tvVacio.visibility = View.VISIBLE
-        }else {
-            binding.tvVacio.visibility = View.GONE
-        }*/
-
         // Configurar la toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.mainActivity_titulo)
 
-        invoiceAdapter = InvoiceAdapter()
+        invoiceAdapter = InvoiceAdapter() {
+                invoice -> onItemSelected(invoice)
+        }
         initViewModel()
         initMainViewModel()
 
@@ -65,8 +52,6 @@ class MainActivity : AppCompatActivity() {
         )
         binding.rvFacturas.addItemDecoration(dividerItemDecoration)
 
-        // binding.rvFacturas.adapter = adapter
-
         // Calcular el máximo importe de la lista
         // TODO arreglar esto
         // maxImporte = obtenerMayorImporte()
@@ -77,13 +62,16 @@ class MainActivity : AppCompatActivity() {
     private fun initViewModel() {
         binding.rvFacturas.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            invoiceAdapter = InvoiceAdapter()
+            invoiceAdapter = InvoiceAdapter() {
+                invoice -> onItemSelected(invoice)
+            }
             adapter = invoiceAdapter
         }
     }
 
     private fun initMainViewModel() {
         val viewModel = ViewModelProvider(this).get(InvoiceViewModel::class.java)
+
         viewModel.getAllRepositoryList().observe(this, Observer<List<Invoice>>{
             invoiceAdapter.setListInvoices(it)
             invoiceAdapter.notifyDataSetChanged()
@@ -96,7 +84,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Funcion alertDialog al pulsar en una factura
-    private fun onItemSelected(factura: Bill) {
+    private fun onItemSelected(factura: Invoice) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.aDialog_titulo)
         builder.setMessage(R.string.aDialog_mensaje)

@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practicafacturas.R
+
 import com.example.practicafacturas.model.Invoice
 
-class InvoiceAdapter(): RecyclerView.Adapter<InvoiceViewHolder>() {
+class InvoiceAdapter(private val onCLickListener: (Invoice) -> Unit): RecyclerView.Adapter<InvoiceViewHolder>() {
 
     private var listInvoices: List<Invoice>? = null
     fun setListInvoices(listInvoices: List<Invoice>?) {
@@ -23,6 +24,6 @@ class InvoiceAdapter(): RecyclerView.Adapter<InvoiceViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: InvoiceViewHolder, position: Int) {
-        holder.render(listInvoices?.get(position)!!)
+        holder.render(listInvoices?.get(position)!!, onCLickListener)
     }
 }

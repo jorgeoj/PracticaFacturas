@@ -3,7 +3,7 @@ package com.example.practicafacturas.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
+// Define una entidad (modelo) que será inyectada en la BBDD con room
 @Entity(tableName = "invoice_table")
 class Invoice(
     @PrimaryKey(autoGenerate = true)

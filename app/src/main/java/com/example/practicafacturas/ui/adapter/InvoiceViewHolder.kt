@@ -3,6 +3,7 @@ package com.example.practicafacturas.ui.adapter
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.practicafacturas.R
+
 import com.example.practicafacturas.databinding.BillItemBinding
 import com.example.practicafacturas.model.Invoice
 import java.text.ParseException
@@ -13,7 +14,7 @@ class InvoiceViewHolder (view: View): ViewHolder(view) {
     val binding = BillItemBinding.bind(view)
     private lateinit var invoice: Invoice
 
-    fun render(item: Invoice) {
+    fun render(item: Invoice, onClickListener: (Invoice) -> Unit) {
         // TODO: Ver si funciona la linea de abajo, sino esta es la linea de antes
         // binding.tvFecha.text = formatearFecha(item.fecha)
         item.fecha?.let { // Verificar si fecha no es nulo
@@ -25,6 +26,10 @@ class InvoiceViewHolder (view: View): ViewHolder(view) {
             binding.tvEstado.text = " "
         }
         binding.tvPrecio.text = "${item.importeOrdenacion} €"
+
+        itemView.setOnClickListener {
+            onClickListener(item)
+        }
     }
 
     private fun formatearFecha(fecha: String): String {
