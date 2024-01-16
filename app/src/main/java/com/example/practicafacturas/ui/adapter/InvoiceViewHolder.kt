@@ -12,11 +12,8 @@ import java.util.Locale
 
 class InvoiceViewHolder (view: View): ViewHolder(view) {
     val binding = BillItemBinding.bind(view)
-    private lateinit var invoice: Invoice
 
     fun render(item: Invoice, onClickListener: (Invoice) -> Unit) {
-        // TODO: Ver si funciona la linea de abajo, sino esta es la linea de antes
-        // binding.tvFecha.text = formatearFecha(item.fecha)
         item.fecha?.let { // Verificar si fecha no es nulo
             binding.tvFecha.text = formatearFecha(it)
         }
@@ -46,5 +43,4 @@ class InvoiceViewHolder (view: View): ViewHolder(view) {
             return fecha
         }
     }
-
 }

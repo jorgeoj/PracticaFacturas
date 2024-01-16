@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practicafacturas.R
-
 import com.example.practicafacturas.model.Invoice
 
 class InvoiceAdapter(private val onCLickListener: (Invoice) -> Unit): RecyclerView.Adapter<InvoiceViewHolder>() {

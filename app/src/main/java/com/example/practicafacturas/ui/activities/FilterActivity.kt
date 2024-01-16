@@ -18,10 +18,7 @@ import java.util.Date
 class FilterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFilterBinding
-    // TODO valores para filtrar la lista
-    private lateinit var fechaInicio: String
-    private lateinit var fechaFin: String
-    private var valorImporte: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFilterBinding.inflate(layoutInflater)

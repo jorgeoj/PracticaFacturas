@@ -1,9 +1,6 @@
 package com.example.practicafacturas.network
 
-import android.view.View
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import com.example.practicafacturas.R
 import com.example.practicafacturas.database.InvoiceDao
 import com.example.practicafacturas.model.Invoice
 import com.example.practicafacturas.model.RepositoriesList

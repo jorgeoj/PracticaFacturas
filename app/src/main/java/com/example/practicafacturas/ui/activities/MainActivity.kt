@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setTitle(R.string.mainActivity_titulo)
 
         invoiceAdapter = InvoiceAdapter() {
-                invoice -> onItemSelected(invoice)
+                invoice -> onItemSelected()
         }
         initViewModel()
         initMainViewModel()
@@ -51,19 +50,13 @@ class MainActivity : AppCompatActivity() {
             layoutManager.orientation
         )
         binding.rvFacturas.addItemDecoration(dividerItemDecoration)
-
-        // Calcular el máximo importe de la lista
-        // TODO arreglar esto
-        // maxImporte = obtenerMayorImporte()
     }
-
-
 
     private fun initViewModel() {
         binding.rvFacturas.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             invoiceAdapter = InvoiceAdapter() {
-                invoice -> onItemSelected(invoice)
+                invoice -> onItemSelected()
             }
             adapter = invoiceAdapter
         }
@@ -80,11 +73,13 @@ class MainActivity : AppCompatActivity() {
                 viewModel.makeApiCall()
                 Log.d("Datos", it.toString())
             }
+            // Calcular el máximo importe de la lista
+            maxImporte = obtenerMayorImporte(it)
         })
     }
 
     // Funcion alertDialog al pulsar en una factura
-    private fun onItemSelected(factura: Invoice) {
+    private fun onItemSelected() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.aDialog_titulo)
         builder.setMessage(R.string.aDialog_mensaje)
@@ -116,13 +111,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Funcion para obtener el mayor importe de la lista
-    /*
-    private fun obtenerMayorImporte(): Double {
+    private fun obtenerMayorImporte(listaFacturas: List<Invoice>): Double {
         var importeMaximo = 0.0
-        for (factura in listaOriginal) {
+        for (factura in listaFacturas) {
             val facturaActual = factura.importeOrdenacion
-            if(importeMaximo < facturaActual) importeMaximo = facturaActual
+            if(importeMaximo < facturaActual!!) importeMaximo = facturaActual
         }
         return  importeMaximo
-    }*/
+    }
 }
