@@ -15,9 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practicafacturas.R
 import com.example.practicafacturas.databinding.ActivityMainBinding
 import com.example.practicafacturas.model.Invoice
+import com.example.practicafacturas.ui.Filter
 import com.example.practicafacturas.ui.adapter.InvoiceAdapter
 import com.example.practicafacturas.viewmodel.InvoiceViewModel
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -73,8 +79,24 @@ class MainActivity : AppCompatActivity() {
                 viewModel.makeApiCall()
                 Log.d("Datos", it.toString())
             }
+            // Obtenemos los datos de la lista de filtros de la otra actividad
+            var datosFiltro = intent.getStringExtra("datosFiltro")
+            // En caso de que los filtros no esten vacios
+            if( datosFiltro != null) {
+                var filtro = Gson().fromJson(datosFiltro, Filter::class.java)
+                var invoiceList = it
+
+                // Hacer que se cumplan los filtros de fecha
+                invoiceList = comprobarFechaFiltro(filtro.fechaMin, filtro.fechaMax, invoiceList)
+
+                // Hacemos que se ponga la lista filtrada
+                invoiceAdapter.setListInvoices(invoiceList)
+            }
+
+            // Lista para almacenar la lista de facturas original y no tocarla
+            val listaOriginal = it
             // Calcular el máximo importe de la lista
-            maxImporte = obtenerMayorImporte(it)
+            maxImporte = obtenerMayorImporte(listaOriginal)
         })
     }
 
@@ -118,5 +140,38 @@ class MainActivity : AppCompatActivity() {
             if(importeMaximo < facturaActual!!) importeMaximo = facturaActual
         }
         return  importeMaximo
+    }
+
+    // Funcion para los filtros de la fecha
+    private fun comprobarFechaFiltro(fechaMin: String, fechaMax: String, invoiceList: List<Invoice>): List<Invoice> {
+        // Lista auxiliar para devolverla despues
+        val listaAux = ArrayList<Invoice>()
+        if (fechaMin != R.string.btn_fecha.toString() && fechaMax != R.string.btn_fecha.toString()) {
+            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            var fechaMinima: Date? = null
+            var fechaMaxima: Date? = null
+
+            // Parseamos las fechas para cambiarlas de tipo String a tipo Date
+            try {
+                fechaMinima = simpleDateFormat.parse(fechaMin)
+                fechaMaxima = simpleDateFormat.parse(fechaMax)
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+
+            // Recorremos la lista de facturas y aquellas que coincidan las añadimos a la lista auxiliar
+            for (invoice in invoiceList) {
+                var invoiceDate = Date()
+                try {
+                    invoiceDate = simpleDateFormat.parse(invoice.fecha)
+                } catch (e: ParseException) {
+                    e.printStackTrace()
+                }
+                if (invoiceDate.after(fechaMinima) && invoiceDate.before(fechaMaxima)) {
+                    listaAux.add(invoice)
+                }
+            }
+        }
+        return listaAux
     }
 }

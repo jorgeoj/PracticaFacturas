@@ -12,6 +12,13 @@ import android.widget.SeekBar
 import androidx.appcompat.widget.Toolbar
 import com.example.practicafacturas.R
 import com.example.practicafacturas.databinding.ActivityFilterBinding
+import com.example.practicafacturas.ui.Constants.Companion.ANULADAS
+import com.example.practicafacturas.ui.Constants.Companion.CUOTA_FIJA
+import com.example.practicafacturas.ui.Constants.Companion.PAGADAS
+import com.example.practicafacturas.ui.Constants.Companion.PENDIENTES_PAGO
+import com.example.practicafacturas.ui.Constants.Companion.PLAN_PAGO
+import com.example.practicafacturas.ui.Filter
+import com.google.gson.Gson
 import java.util.Calendar
 import java.util.Date
 
@@ -43,7 +50,7 @@ class FilterActivity : AppCompatActivity() {
         controlarSlider(maxImporte)
 
 
-        // TODO Funcion al darle al botón de aplicar los filtros
+        // Funcionalidad al darle al botón de aplicar los filtros
         binding.btnAplicar.setOnClickListener { filtrarValores() }
 
         // Funcionalidad al darle al boton de eliminar filtros
@@ -100,10 +107,34 @@ class FilterActivity : AppCompatActivity() {
         })
     }
 
-    //
+    // Función para los filtros
     private fun filtrarValores() {
-        // TODO aun hay que implementar el pasar los datos para filtrar
+        val gson = Gson()
         val intent = Intent(this, MainActivity::class.java)
+
+        val estadosCB = hashMapOf(
+            PAGADAS to binding.cbPagadas.isChecked,
+            ANULADAS to binding.cbAnuladas.isChecked,
+            CUOTA_FIJA to binding.cbCuotaFija.isChecked,
+            PENDIENTES_PAGO to binding.cbPendientesPago.isChecked,
+            PLAN_PAGO to binding.cbPlanPago.isChecked
+        )
+
+        var fechaMin = binding.btnFechaDesde.text.toString()
+        var fechaMax = binding.btnFechaHasta.text.toString()
+        var importe = binding.slider.progress.toDouble()
+
+        // TEMPORAL: Para hacer pruebas
+        /*
+        Log.d("CHECK", estadosCB.toString())
+        Log.d("MAX", importe.toString())
+        Log.d("MINDATE", fechaMin)
+        Log.d("MAXDATE", fechaMax)
+        */
+
+        var filtro = Filter(fechaMax, fechaMin, importe, estadosCB)
+        intent.putExtra("datosFiltro", gson.toJson(filtro))
+
         startActivity(intent)
     }
 
@@ -114,7 +145,7 @@ class FilterActivity : AppCompatActivity() {
         binding.btnFechaHasta.setText(R.string.btn_fecha)
 
         // Restablecer valor del slider
-        binding.slider.setProgress(1, true)
+        binding.slider.setProgress(0, true)
 
         // Restablecer valores de las checkBox
         binding.cbPagadas.isChecked = false

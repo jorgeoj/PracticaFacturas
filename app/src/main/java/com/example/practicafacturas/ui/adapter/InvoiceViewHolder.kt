@@ -14,9 +14,7 @@ class InvoiceViewHolder (view: View): ViewHolder(view) {
     val binding = BillItemBinding.bind(view)
 
     fun render(item: Invoice, onClickListener: (Invoice) -> Unit) {
-        item.fecha?.let { // Verificar si fecha no es nulo
-            binding.tvFecha.text = formatearFecha(it)
-        }
+        item.fecha?.let { binding.tvFecha.text = formatearFecha(it) }
         if (item.descEstado == "Pendiente de pago") {
             binding.tvEstado.setText(R.string.factura_estado)
         }else{
