@@ -19,8 +19,10 @@ import com.example.practicafacturas.ui.Constants.Companion.PENDIENTES_PAGO
 import com.example.practicafacturas.ui.Constants.Companion.PLAN_PAGO
 import com.example.practicafacturas.ui.Filter
 import com.google.gson.Gson
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 class FilterActivity : AppCompatActivity() {
 
@@ -40,13 +42,13 @@ class FilterActivity : AppCompatActivity() {
         var maxImporte = intent.getDoubleExtra("maxImporte", 0.0)
 
         // Funcionalidad botones de fecha
-        binding.btnFechaDesde.setOnClickListener { obtenerFecha(binding.btnFechaDesde) }
-        binding.btnFechaHasta.setOnClickListener { obtenerFecha(binding.btnFechaHasta) }
+        binding.btnFechaDesde.setOnClickListener { obtenerFecha(binding.btnFechaDesde, false) }
+        binding.btnFechaHasta.setOnClickListener { obtenerFecha(binding.btnFechaHasta, true, fechaMinima = obtenerFechaDesdeAux()) }
 
         // Valores de los textView para el slider y cosas del slider
         binding.tvMinSlider.text = "${getString(R.string.txt_min_valor_slider)} €"
         binding.tvMaxSlider.text = "${(maxImporte.toInt() + 1)} €"
-        binding.tvValorActual.text = "${getString(R.string.txt_min_valor_slider)} €"
+        binding.tvValorActual.text = "${(maxImporte.toInt() + 1)} €"
         controlarSlider(maxImporte)
 
 
@@ -54,7 +56,7 @@ class FilterActivity : AppCompatActivity() {
         binding.btnAplicar.setOnClickListener { filtrarValores() }
 
         // Funcionalidad al darle al boton de eliminar filtros
-        binding.btnEliminar.setOnClickListener { eliminarValores() }
+        binding.btnEliminar.setOnClickListener { eliminarValores(maxImporte) }
     }
 
     // Crear el menu para ir a la actividad principal
@@ -76,7 +78,8 @@ class FilterActivity : AppCompatActivity() {
         }
     }
 
-    private fun obtenerFecha(btnFecha: Button) {
+    // Funcion para la fecha de los botones
+    private fun obtenerFecha(btnFecha: Button, restriccionMinDate: Boolean, fechaMinima: Long? = null) {
         val calendario = Calendar.getInstance()
         val anyo = calendario.get(Calendar.YEAR)
         val mes = calendario.get(Calendar.MONTH) + 1
@@ -86,13 +89,36 @@ class FilterActivity : AppCompatActivity() {
                 btnFecha.text = "$dayOfMonth/${month + 1}/$year1"
             }, anyo, mes, dia)
 
-        datePickerDialog.datePicker.maxDate = Date().time
+        // datePickerDialog.datePicker.maxDate = Date().time
+        if(restriccionMinDate) {
+            fechaMinima?.let { datePickerDialog.datePicker.minDate = it }
+
+        }
         datePickerDialog.show()
+    }
+
+    // Funcion para obtener el valor del boton de la fecha desde
+    private fun obtenerFechaDesdeAux(): Long {
+        val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+        // Obtiene la fecha desde tu botón
+        val fechaDesdeTexto = binding.btnFechaDesde.text.toString()
+
+        try {
+            // Parsea la fecha y devuelve el tiempo en milisegundos
+            val fechaDesde = formato.parse(fechaDesdeTexto)
+            return fechaDesde?.time ?: 0L
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        // En caso de error, devuelve 0
+        return 0L
     }
 
     private fun controlarSlider(maxImporte: Double) {
         binding.slider.min = 0
         binding.slider.max = maxImporte.toInt() + 1
+        binding.slider.progress = maxImporte.toInt() + 1
         binding.slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 binding.tvValorActual.text = "${progress} €"
@@ -124,14 +150,6 @@ class FilterActivity : AppCompatActivity() {
         var fechaMax = binding.btnFechaHasta.text.toString()
         var importe = binding.slider.progress.toDouble()
 
-        // TEMPORAL: Para hacer pruebas
-        /*
-        Log.d("CHECK", estadosCB.toString())
-        Log.d("MAX", importe.toString())
-        Log.d("MINDATE", fechaMin)
-        Log.d("MAXDATE", fechaMax)
-        */
-
         var filtro = Filter(fechaMax, fechaMin, importe, estadosCB)
         intent.putExtra("datosFiltro", gson.toJson(filtro))
 
@@ -139,13 +157,13 @@ class FilterActivity : AppCompatActivity() {
     }
 
     // Función que restablece los filtros
-    private fun eliminarValores() {
+    private fun eliminarValores(maxImporte: Double) {
         // Resetear valores de los botones de fecha (No estoy seguro si esto funcionaría)
         binding.btnFechaDesde.setText(R.string.btn_fecha)
         binding.btnFechaHasta.setText(R.string.btn_fecha)
 
         // Restablecer valor del slider
-        binding.slider.setProgress(0, true)
+        binding.slider.setProgress(maxImporte.toInt() + 1, true)
 
         // Restablecer valores de las checkBox
         binding.cbPagadas.isChecked = false

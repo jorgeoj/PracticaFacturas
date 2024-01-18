@@ -15,12 +15,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practicafacturas.R
 import com.example.practicafacturas.databinding.ActivityMainBinding
 import com.example.practicafacturas.model.Invoice
+import com.example.practicafacturas.ui.Constants.Companion.ANULADAS
+import com.example.practicafacturas.ui.Constants.Companion.CUOTA_FIJA
+import com.example.practicafacturas.ui.Constants.Companion.PAGADAS
+import com.example.practicafacturas.ui.Constants.Companion.PENDIENTES_PAGO
+import com.example.practicafacturas.ui.Constants.Companion.PLAN_PAGO
 import com.example.practicafacturas.ui.Filter
 import com.example.practicafacturas.ui.adapter.InvoiceAdapter
 import com.example.practicafacturas.viewmodel.InvoiceViewModel
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -88,15 +92,17 @@ class MainActivity : AppCompatActivity() {
 
                 // Hacer que se cumplan los filtros de fecha
                 invoiceList = comprobarFechaFiltro(filtro.fechaMin, filtro.fechaMax, invoiceList)
+                // Hacer que se cumplan los filtros de importe
+                invoiceList = comprobarImporteFiltro(filtro.importe, invoiceList)
+                // Hacer que se cumplan los filtros de estado
+                invoiceList = comprobarEstadosFiltro(filtro.estado, invoiceList)
 
                 // Hacemos que se ponga la lista filtrada
                 invoiceAdapter.setListInvoices(invoiceList)
             }
 
-            // Lista para almacenar la lista de facturas original y no tocarla
-            val listaOriginal = it
             // Calcular el máximo importe de la lista
-            maxImporte = obtenerMayorImporte(listaOriginal)
+            maxImporte = obtenerMayorImporte(it)
         })
     }
 
@@ -146,30 +152,63 @@ class MainActivity : AppCompatActivity() {
     private fun comprobarFechaFiltro(fechaMin: String, fechaMax: String, invoiceList: List<Invoice>): List<Invoice> {
         // Lista auxiliar para devolverla despues
         val listaAux = ArrayList<Invoice>()
-        if (fechaMin != R.string.btn_fecha.toString() && fechaMax != R.string.btn_fecha.toString()) {
-            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            var fechaMinima: Date? = null
-            var fechaMaxima: Date? = null
+        if (fechaMin != getString(R.string.btn_fecha) && fechaMax != getString(R.string.btn_fecha)) {
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-            // Parseamos las fechas para cambiarlas de tipo String a tipo Date
-            try {
-                fechaMinima = simpleDateFormat.parse(fechaMin)
-                fechaMaxima = simpleDateFormat.parse(fechaMax)
-            } catch (e: ParseException) {
-                e.printStackTrace()
+            val fechaMinima: Date? = sdf.parse(fechaMin)
+            val fechaMaxima: Date? = sdf.parse(fechaMax)
+
+            for (factura in invoiceList) {
+                val fecha = sdf.parse(factura.fecha)!!
+                if (fecha.after(fechaMinima) && fecha.before(fechaMaxima)) {
+                    listaAux.add(factura)
+                }
             }
 
-            // Recorremos la lista de facturas y aquellas que coincidan las añadimos a la lista auxiliar
-            for (invoice in invoiceList) {
-                var invoiceDate = Date()
-                try {
-                    invoiceDate = simpleDateFormat.parse(invoice.fecha)
-                } catch (e: ParseException) {
-                    e.printStackTrace()
-                }
-                if (invoiceDate.after(fechaMinima) && invoiceDate.before(fechaMaxima)) {
-                    listaAux.add(invoice)
-                }
+        } else {
+            return invoiceList
+        }
+        return listaAux
+    }
+
+    // Funcion para los filtros del importe
+    private fun comprobarImporteFiltro(importe: Double, invoiceList: List<Invoice>): List<Invoice> {
+        // Creamos una lista auxiliar para después devolverla
+        var listaAux = ArrayList<Invoice>()
+        // Recorremos la lista y si el importe de la factura es menor que el importe seleccionado, la añadimos a la lista
+        for (factura in invoiceList) {
+            if (factura.importeOrdenacion!! < importe) {
+                listaAux.add(factura)
+            }
+        }
+        return listaAux
+    }
+
+    // Funcion para los filtros de estado
+    private fun comprobarEstadosFiltro(estado: HashMap<String, Boolean>, invoiceList: List<Invoice>): List<Invoice> {
+        // Creamos una lista auxiliar para después devolverla
+        var listaAux = ArrayList<Invoice>()
+
+        val chBoxPagadas = estado[PAGADAS] ?: false
+        val chBoxAnuladas = estado[ANULADAS] ?: false
+        val chBoxCuotaFija = estado[CUOTA_FIJA] ?: false
+        val chBoxPendientePago = estado[PENDIENTES_PAGO] ?: false
+        val chBoxPlanPago = estado[PLAN_PAGO] ?: false
+
+        if (!chBoxPagadas && !chBoxAnuladas && !chBoxCuotaFija && !chBoxPendientePago && !chBoxPlanPago) {
+            return invoiceList
+        }
+
+        for (invoice in invoiceList) {
+            val invoiceState = invoice.descEstado
+            val esPagada = invoiceState == getString(R.string.chBox_pagadas)
+            val esAnulada = invoiceState == getString(R.string.chBox_anuladas)
+            val esCuotaFija = invoiceState == getString(R.string.chBox_cFija)
+            val esPendientePago = invoiceState == getString(R.string.chBox_pendientePago)
+            val esPlanPago = invoiceState == getString(R.string.chBox_planPago)
+
+            if ((esPagada && chBoxPagadas) || (esAnulada && chBoxAnuladas) || (esCuotaFija && chBoxCuotaFija) || (esPendientePago && chBoxPendientePago) || (esPlanPago && esPlanPago)) {
+                listaAux.add(invoice)
             }
         }
         return listaAux
