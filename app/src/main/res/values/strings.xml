@@ -7,7 +7,7 @@
 
     <!-- MainActivity (No se si es necesario) -->
     <string name="factura_estado">Pendiente de pago</string>
-    <string name="txt_vacio">Aquí no hay nada</string>
+    <string name="txt_vacio">No hay facturas</string>
 
     <!-- AlertDialog al pulsar sobre una factura -->
     <string name="aDialog_titulo">Información</string>
@@ -37,5 +37,4 @@
     <string name="btn_fecha">día/mes/año</string>
     <string name="btn_aplicar">Aplicar</string>
     <string name="btn_eliminar">Eliminar filtros</string>
-
 </resources>

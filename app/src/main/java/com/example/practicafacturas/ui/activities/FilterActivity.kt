@@ -21,42 +21,50 @@ import com.example.practicafacturas.ui.Filter
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 class FilterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFilterBinding
+    // Obtenemos los datos al pasar de una actividad a otra
+    private var maxImporte = 0
+    private var filtro: Filter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        inicializarComponentes()
+
         // Configurar la toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.filterActivity_titulo)
+    }
 
-        // Obtenemos los datos al pasar de una actividad a otra
-        var maxImporte = intent.getDoubleExtra("maxImporte", 0.0)
+    private fun inicializarComponentes() {
+        inicializarCalendario()
+        inicializarSlider()
 
-        // Funcionalidad botones de fecha
-        binding.btnFechaDesde.setOnClickListener { obtenerFecha(binding.btnFechaDesde, false) }
-        binding.btnFechaHasta.setOnClickListener { obtenerFecha(binding.btnFechaHasta, true, fechaMinima = obtenerFechaDesdeAux()) }
+        aplicarFiltrosGuardados()
 
-        // Valores de los textView para el slider y cosas del slider
-        binding.tvMinSlider.text = "${getString(R.string.txt_min_valor_slider)} €"
-        binding.tvMaxSlider.text = "${(maxImporte.toInt() + 1)} €"
-        binding.tvValorActual.text = "${(maxImporte.toInt() + 1)} €"
-        controlarSlider(maxImporte)
-
+        val filtroJson = intent.getStringExtra("FILTRO_DATOS")
+        if (filtroJson != null) {
+            filtro = Gson().fromJson(filtroJson, Filter::class.java)
+            filtro?.let { filtroNoNulo ->
+                cargarFiltros(filtroNoNulo)
+            }
+        }
 
         // Funcionalidad al darle al botón de aplicar los filtros
-        binding.btnAplicar.setOnClickListener { filtrarValores() }
+        binding.btnAplicar.setOnClickListener {
+            actualizarSharedPreferences()
+            filtrarValores()
+        }
 
         // Funcionalidad al darle al boton de eliminar filtros
-        binding.btnEliminar.setOnClickListener { eliminarValores(maxImporte) }
+        binding.btnEliminar.setOnClickListener { eliminarValores() }
     }
 
     // Crear el menu para ir a la actividad principal
@@ -76,6 +84,43 @@ class FilterActivity : AppCompatActivity() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun inicializarCalendario() {
+        // Funcionalidad botones de fecha
+        binding.btnFechaDesde.setOnClickListener { obtenerFecha(binding.btnFechaDesde, false) }
+        binding.btnFechaHasta.setOnClickListener { obtenerFecha(binding.btnFechaHasta, true, fechaMinima = obtenerFechaDesdeAux()) }
+    }
+
+    private fun inicializarSlider() {
+        maxImporte = intent.getDoubleExtra("maxImporte", 0.0).toInt() + 1
+
+        // Valores de los textView para el slider y cosas del slider
+        binding.tvMinSlider.text = "${getString(R.string.txt_min_valor_slider)} €"
+        binding.tvMaxSlider.text = "${maxImporte} €"
+        binding.tvValorActual.text = "${maxImporte} €"
+        controlarSlider()
+    }
+
+    private fun aplicarFiltrosGuardados() {
+        val preferences = getPreferences(MODE_PRIVATE)
+        val filtroJson = preferences.getString("ESTADO_FILTRO", null)
+
+        if (filtroJson != null) {
+            val gson = Gson()
+            filtro = gson.fromJson(filtroJson, Filter::class.java)
+            filtro?.let { filtroNoNulo ->
+                cargarFiltros(filtroNoNulo)
+            }
+        }
+    }
+
+    private fun guardarEstadoFiltros(filter: Filter) {
+        val preferences = getPreferences(MODE_PRIVATE)
+        val gson = Gson()
+        val filtroJson = gson.toJson(filter)
+
+        preferences.edit().putString("ESTADO_FILTROS", filtroJson).apply()
     }
 
     // Funcion para la fecha de los botones
@@ -115,10 +160,10 @@ class FilterActivity : AppCompatActivity() {
         return 0L
     }
 
-    private fun controlarSlider(maxImporte: Double) {
+    private fun controlarSlider() {
         binding.slider.min = 0
-        binding.slider.max = maxImporte.toInt() + 1
-        binding.slider.progress = maxImporte.toInt() + 1
+        binding.slider.max = maxImporte
+        binding.slider.progress = maxImporte
         binding.slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 binding.tvValorActual.text = "${progress} €"
@@ -151,19 +196,22 @@ class FilterActivity : AppCompatActivity() {
         var importe = binding.slider.progress.toDouble()
 
         var filtro = Filter(fechaMax, fechaMin, importe, estadosCB)
+
+        guardarEstadoFiltros(filtro)
+
         intent.putExtra("datosFiltro", gson.toJson(filtro))
 
         startActivity(intent)
     }
 
     // Función que restablece los filtros
-    private fun eliminarValores(maxImporte: Double) {
+    private fun eliminarValores() {
         // Resetear valores de los botones de fecha (No estoy seguro si esto funcionaría)
         binding.btnFechaDesde.setText(R.string.btn_fecha)
         binding.btnFechaHasta.setText(R.string.btn_fecha)
 
         // Restablecer valor del slider
-        binding.slider.setProgress(maxImporte.toInt() + 1, true)
+        binding.slider.setProgress(maxImporte)
 
         // Restablecer valores de las checkBox
         binding.cbPagadas.isChecked = false
@@ -171,5 +219,32 @@ class FilterActivity : AppCompatActivity() {
         binding.cbCuotaFija.isChecked = false
         binding.cbPendientesPago.isChecked = false
         binding.cbPlanPago.isChecked = false
+    }
+
+    private fun cargarFiltros(filter: Filter) {
+        binding.btnFechaDesde.text = filter.fechaMin
+        binding.btnFechaHasta.text = filter.fechaMax
+        binding.slider.progress = filter.importe.toInt()
+        binding.cbPagadas.isChecked = filter.estado[PAGADAS] ?: false
+        binding.cbAnuladas.isChecked = filter.estado[ANULADAS] ?: false
+        binding.cbCuotaFija.isChecked = filter.estado[CUOTA_FIJA] ?: false
+        binding.cbPendientesPago.isChecked = filter.estado[PENDIENTES_PAGO] ?: false
+        binding.cbPlanPago.isChecked = filter.estado[PLAN_PAGO] ?: false
+    }
+
+    private fun actualizarSharedPreferences() {
+        val slider = binding.slider.progress.toDouble()
+        val checkBoxes = hashMapOf(
+            PAGADAS to binding.cbPagadas.isChecked,
+            ANULADAS to binding.cbAnuladas.isChecked,
+            CUOTA_FIJA to binding.cbCuotaFija.isChecked,
+            PENDIENTES_PAGO to binding.cbPendientesPago.isChecked,
+            PLAN_PAGO to binding.cbPlanPago.isChecked
+        )
+        val fechaMin = binding.btnFechaDesde.text.toString()
+        val fechaMax = binding.btnFechaHasta.text.toString()
+        filtro = Filter(fechaMax, fechaMin, slider, checkBoxes)
+
+        guardarEstadoFiltros(filtro!!)
     }
 }

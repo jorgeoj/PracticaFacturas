@@ -1,11 +1,13 @@
 package com.example.practicafacturas.ui.activities
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
@@ -24,16 +26,22 @@ import com.example.practicafacturas.ui.Filter
 import com.example.practicafacturas.ui.adapter.InvoiceAdapter
 import com.example.practicafacturas.viewmodel.InvoiceViewModel
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+// TODO: Hacer que se guarden los filtros y pasarlos al volver a la pantalla de filtros desde la MainActivity (SharedPreferences)
+// TODO: Lo mismo de arriba con la listra filtrada
+// TODO: Organizar las clases en carpetas mejor y refactorizar buscando mejorar el codigo
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var invoiceAdapter: InvoiceAdapter
+    private var filtro: Filter? = null
     private var maxImporte: Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +84,13 @@ class MainActivity : AppCompatActivity() {
         val viewModel = ViewModelProvider(this).get(InvoiceViewModel::class.java)
 
         viewModel.getAllRepositoryList().observe(this, Observer<List<Invoice>>{
-            invoiceAdapter.setListInvoices(it)
+
+            var listaConFiltro = getListaFiltradaSharedPreferences()
+            if (listaConFiltro == null || listaConFiltro.isEmpty()) {
+                invoiceAdapter.setListInvoices(it)
+            } else {
+                invoiceAdapter.setListInvoices(listaConFiltro)
+            }
             invoiceAdapter.notifyDataSetChanged()
 
             if (it.isEmpty()) {
@@ -87,16 +101,26 @@ class MainActivity : AppCompatActivity() {
             var datosFiltro = intent.getStringExtra("datosFiltro")
             // En caso de que los filtros no esten vacios
             if( datosFiltro != null) {
-                var filtro = Gson().fromJson(datosFiltro, Filter::class.java)
+                filtro = Gson().fromJson(datosFiltro, Filter::class.java)
                 var invoiceList = it
 
-                // Hacer que se cumplan los filtros de fecha
-                invoiceList = comprobarFechaFiltro(filtro.fechaMin, filtro.fechaMax, invoiceList)
-                // Hacer que se cumplan los filtros de importe
-                invoiceList = comprobarImporteFiltro(filtro.importe, invoiceList)
-                // Hacer que se cumplan los filtros de estado
-                invoiceList = comprobarEstadosFiltro(filtro.estado, invoiceList)
+                filtro?.let { filtroNoNulo ->
+                    // Hacer que se cumplan los filtros de fecha
+                    invoiceList = comprobarFechaFiltro(filtroNoNulo.fechaMin, filtroNoNulo.fechaMax, invoiceList)
+                    // Hacer que se cumplan los filtros de importe
+                    invoiceList = comprobarImporteFiltro(filtroNoNulo.importe, invoiceList)
+                    // Hacer que se cumplan los filtros de estado
+                    invoiceList = comprobarEstadosFiltro(filtroNoNulo.estado, invoiceList)
+                }
 
+                // Guarda la lista en las SharedPreferences
+                guardarListaFiltradaSharedPreferences(invoiceList)
+
+                // Controlar si la lista es vacia que haga visible el textView que lo indica
+                if(invoiceList.isEmpty()) {
+                    val tvVacio = binding.tvVacio
+                    tvVacio.visibility = View.VISIBLE
+                }
                 // Hacemos que se ponga la lista filtrada
                 invoiceAdapter.setListInvoices(invoiceList)
             }
@@ -125,12 +149,16 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    // Funcionalidad del menu para ir a los filtros
+    // Funcionalidad del menu para ir a la actividad de los filtros
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filtros_menu -> {
                 val intent = Intent(this, FilterActivity::class.java)
                 intent.putExtra("maxImporte", maxImporte)
+                if (filtro != null) {
+                    var gson = Gson()
+                    intent.putExtra("FILTRO_DATOS", gson.toJson(filtro))
+                }
                 startActivity(intent)
                 true
             }
@@ -201,16 +229,37 @@ class MainActivity : AppCompatActivity() {
 
         for (invoice in invoiceList) {
             val invoiceState = invoice.descEstado
-            val esPagada = invoiceState == getString(R.string.chBox_pagadas)
-            val esAnulada = invoiceState == getString(R.string.chBox_anuladas)
-            val esCuotaFija = invoiceState == getString(R.string.chBox_cFija)
-            val esPendientePago = invoiceState == getString(R.string.chBox_pendientePago)
-            val esPlanPago = invoiceState == getString(R.string.chBox_planPago)
+            val esPagada = invoiceState == "Pagada"
+            val esAnulada = invoiceState == "Anuladas"
+            val esCuotaFija = invoiceState == "cuotaFija"
+            val esPendientePago = invoiceState == "Pendiente de pago"
+            val esPlanPago = invoiceState == "planPago"
 
-            if ((esPagada && chBoxPagadas) || (esAnulada && chBoxAnuladas) || (esCuotaFija && chBoxCuotaFija) || (esPendientePago && chBoxPendientePago) || (esPlanPago && esPlanPago)) {
+            if ((esPagada && chBoxPagadas) || (esAnulada && chBoxAnuladas) || (esCuotaFija && chBoxCuotaFija) || (esPendientePago && chBoxPendientePago) || (esPlanPago && chBoxPlanPago)) {
                 listaAux.add(invoice)
             }
         }
         return listaAux
+    }
+
+    private fun guardarListaFiltradaSharedPreferences(listaFiltrada: List<Invoice>) {
+        val gson = Gson()
+        val listaFiltradaJson = gson.toJson(listaFiltrada)
+
+        val sharedPreferences: SharedPreferences = getPreferences(MODE_PRIVATE)
+        sharedPreferences.edit().putString("LISTA_FILTRADA", listaFiltradaJson).apply()
+    }
+
+    private fun getListaFiltradaSharedPreferences(): List<Invoice>? {
+        val sharedPreferences: SharedPreferences = getPreferences(MODE_PRIVATE)
+        val listaFiltradaJson: String? = sharedPreferences.getString("LISTA_FILTRADA", null)
+
+        return if (listaFiltradaJson != null) {
+            val gson = Gson()
+            val type = object : TypeToken<List<Invoice>>() {}.type
+            gson.fromJson(listaFiltradaJson, type)
+        } else {
+            null
+        }
     }
 }
