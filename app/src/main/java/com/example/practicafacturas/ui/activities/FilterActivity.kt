@@ -26,20 +26,18 @@ import java.util.Locale
 class FilterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFilterBinding
-    private var maxImporte = 0
-    private var filtro: Filter? = null
+    private var maxPrice = 0
+    private var filter: Filter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        inicializarComponentes()
-
-        // Configurar la toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setTitle(R.string.filterActivity_titulo)
+        // Función que inicializa la toolbar y la personaliza
+        initializateToolbar()
+        // Función que inicializa los componentes de la actividad
+        initializateComponents()
     }
 
     // Crear el menu para ir a la actividad principal
@@ -62,97 +60,75 @@ class FilterActivity : AppCompatActivity() {
     }
 
     // Funcion para inicializar los componentes de la clase
-    private fun inicializarComponentes() {
-        inicializarCalendario()
-        inicializarSlider()
+    private fun initializateComponents() {
+        // Funciones para inicializar los botones de fecha y el slider
+        initializateCalendar()
+        initializateSlider()
+        // Funcion para aplicar los filtros guardados en las shared preferences
+        applySavedFilters()
 
-        aplicarFiltrosGuardados()
-
-        val filtroJson = intent.getStringExtra("FILTRO_DATOS")
-        if (filtroJson != null) {
-            filtro = Gson().fromJson(filtroJson, Filter::class.java)
-            filtro?.let { filtroNoNulo ->
-                cargarFiltros(filtroNoNulo)
+        // Obtenemos el objeto filtro de la otra clase, lo deserializamos y si no es nulo cargamos los filtros
+        val jsonFilter = intent.getStringExtra("FILTRO_DATOS")
+        if (jsonFilter != null) {
+            filter = Gson().fromJson(jsonFilter, Filter::class.java)
+            filter?.let { nonNullFilter ->
+                loadFilters(nonNullFilter)
             }
         }
 
         // Funcionalidad al darle al botón de aplicar los filtros
         binding.btnAplicar.setOnClickListener {
-            actualizarSharedPreferences()
-            filtrarValores()
+            uploadSharedPreferences()
+            filterValues()
         }
 
         // Funcionalidad al darle al boton de eliminar filtros
-        binding.btnEliminar.setOnClickListener { eliminarValores() }
+        binding.btnEliminar.setOnClickListener { deleteValues() }
     }
 
-    private fun inicializarCalendario() {
+    // Configurar la toolbar
+    private fun initializateToolbar() {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setTitle(R.string.filterActivity_titulo)
+    }
+
+    // Inicializamos los botones que funcionan como datePicker
+    private fun initializateCalendar() {
         // Funcionalidad botones de fecha
-        binding.btnFechaDesde.setOnClickListener { obtenerFecha(binding.btnFechaDesde, false) }
-        binding.btnFechaHasta.setOnClickListener { obtenerFecha(binding.btnFechaHasta, true, fechaMinima = obtenerFechaDesdeAux()) }
+        binding.btnFechaDesde.setOnClickListener { obtainDate(binding.btnFechaDesde, false) }
+        binding.btnFechaHasta.setOnClickListener { obtainDate(binding.btnFechaHasta, true, minDate = obtainMinDateAux()) }
     }
 
-    private fun inicializarSlider() {
-        maxImporte = intent.getDoubleExtra("maxImporte", 0.0).toInt() + 1
-
-        // Valores de los textView para el slider y cosas del slider
-        binding.tvMinSlider.text = "${getString(R.string.txt_min_valor_slider)} €"
-        binding.tvMaxSlider.text = "${maxImporte} €"
-        binding.tvValorActual.text = "${maxImporte} €"
-        controlarSlider()
-    }
-
-    private fun aplicarFiltrosGuardados() {
-        val preferences = getPreferences(MODE_PRIVATE)
-        val filtroJson = preferences.getString("ESTADO_FILTRO", null)
-
-        if (filtroJson != null) {
-            val gson = Gson()
-            filtro = gson.fromJson(filtroJson, Filter::class.java)
-            filtro?.let { filtroNoNulo ->
-                cargarFiltros(filtroNoNulo)
-            }
-        }
-    }
-
-    private fun guardarEstadoFiltros(filter: Filter) {
-        val preferences = getPreferences(MODE_PRIVATE)
-        val gson = Gson()
-        val filtroJson = gson.toJson(filter)
-
-        preferences.edit().putString("ESTADO_FILTRO", filtroJson).apply()
-    }
-
-    // Funcion para la fecha de los botones
-    private fun obtenerFecha(btnFecha: Button, restriccionMinDate: Boolean, fechaMinima: Long? = null) {
-        val calendario = Calendar.getInstance()
-        val anyo = calendario.get(Calendar.YEAR)
-        val mes = calendario.get(Calendar.MONTH) + 1
-        val dia = calendario.get(Calendar.DAY_OF_MONTH)
+    // Funcion para manejar la fecha seleccionada en los botones
+    private fun obtainDate(btnDate: Button, minDateRestriction: Boolean, minDate: Long? = null) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        // Crear un DatePickerDialog con la fecha actual como predeterminada
         val datePickerDialog = DatePickerDialog(this,
-            { view, year1, month, dayOfMonth ->
-                btnFecha.text = "$dayOfMonth/${month + 1}/$year1"
-            }, anyo, mes, dia)
+            { view, year1, month1, dayOfMonth ->
+                btnDate.text = "$dayOfMonth/${month1 + 1}/$year1"
+            }, year, month, day)
 
-        // datePickerDialog.datePicker.maxDate = Date().time
-        if(restriccionMinDate) {
-            fechaMinima?.let { datePickerDialog.datePicker.minDate = it }
-
-        }
+        // Aplicar restriccion de fecha minima si es necesario
+        if(minDateRestriction) { minDate?.let { datePickerDialog.datePicker.minDate = it } }
         datePickerDialog.show()
     }
 
-    // Funcion para obtener el valor del boton de la fecha desde
-    private fun obtenerFechaDesdeAux(): Long {
-        val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    // Funcion para obtener el valor del boton de la fecha minima permitida
+    private fun obtainMinDateAux(): Long {
+        // Formato de fecha esperado en el botón
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
         // Obtiene la fecha desde tu botón
-        val fechaDesdeTexto = binding.btnFechaDesde.text.toString()
+        val selectedDateFrom = binding.btnFechaDesde.text.toString()
 
         try {
-            // Parsea la fecha y devuelve el tiempo en milisegundos
-            val fechaDesde = formato.parse(fechaDesdeTexto)
-            return fechaDesde?.time ?: 0L
+            // Parsea la fecha y la devuelve como tipo Date
+            val dateFrom = dateFormat.parse(selectedDateFrom)
+            return dateFrom?.time ?: 0L
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -160,58 +136,77 @@ class FilterActivity : AppCompatActivity() {
         return 0L
     }
 
-    private fun controlarSlider() {
+    // Funcion para inicializar el slider de importe
+    private fun initializateSlider() {
+        // Obtenemos el mayor importe de la MainActivity
+        maxPrice = intent.getDoubleExtra("maxImporte", 0.0).toInt() + 1
+
+        // Establecer los valores de los TextView para el slider
+        binding.tvMinSlider.text = "${getString(R.string.txt_min_valor_slider)} €"
+        binding.tvMaxSlider.text = "${maxPrice} €"
+        binding.tvValorActual.text = "${maxPrice} €"
+
+        // Configurar el slider
+        controlSlider()
+    }
+
+    // Función para controlar la configuración del slider de importe
+    private fun controlSlider() {
+        // Valores mínimo, máximo y progreso del slider
         binding.slider.min = 0
-        binding.slider.max = maxImporte
-        binding.slider.progress = maxImporte
+        binding.slider.max = maxPrice
+        binding.slider.progress = maxPrice
+
+        // Listener para el cambio de progreso en el slider
         binding.slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            // Actualizar el valor actual en el TextView según el progreso del slider
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 binding.tvValorActual.text = "${progress} €"
             }
+            // Acciones cuando se inicia la interacción con el slider
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
                 Log.d("onStartTrackingTouch", "onStartTrackingTouch: ha fallado")
             }
-
+            // Acciones cuando se detiene la interacción con el slider
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 Log.d("onStopTrackingTouch", "onStopTrackingTouch: ha fallado")
             }
         })
     }
 
-    // Función para los filtros
-    private fun filtrarValores() {
+    // Función para aplicar los filtros y volver a la actividad principal
+    private fun filterValues() {
         val gson = Gson()
         val intent = Intent(this, MainActivity::class.java)
 
-        val estadosCB = hashMapOf(
+        // Guardamos los valores en un objeto filtro para despues pasarlo a la otra actividad
+        val chBoxStatus = hashMapOf(
             PAGADAS to binding.cbPagadas.isChecked,
             ANULADAS to binding.cbAnuladas.isChecked,
             CUOTA_FIJA to binding.cbCuotaFija.isChecked,
             PENDIENTES_PAGO to binding.cbPendientesPago.isChecked,
             PLAN_PAGO to binding.cbPlanPago.isChecked
         )
+        var minDate = binding.btnFechaDesde.text.toString()
+        var maxDate = binding.btnFechaHasta.text.toString()
+        var price = binding.slider.progress.toDouble()
+        // Objeto filtro con todos los valores obtenidos
+        var filtro = Filter(maxDate, minDate, price, chBoxStatus)
 
-        var fechaMin = binding.btnFechaDesde.text.toString()
-        var fechaMax = binding.btnFechaHasta.text.toString()
-        var importe = binding.slider.progress.toDouble()
-
-        var filtro = Filter(fechaMax, fechaMin, importe, estadosCB)
-
-        guardarEstadoFiltros(filtro)
-
+        // Guardamos los estados de los filtros
+        saveFilterStatus(filtro)
         intent.putExtra("datosFiltro", gson.toJson(filtro))
-
         startActivity(intent)
     }
 
-    // Función que restablece los filtros
-    private fun eliminarValores() {
-        // Resetear valores de los botones de fecha (No estoy seguro si esto funcionaría)
+    // Función que restablece los valores de los filtros
+    private fun deleteValues() {
+        // Resetear valores de los botones de fecha
         binding.btnFechaDesde.setText(R.string.btn_fecha)
         binding.btnFechaHasta.setText(R.string.btn_fecha)
 
-        // Restablecer valor del slider
-        binding.slider.setProgress(maxImporte)
+        // Restablecer valor del slider al máximo
+        binding.slider.setProgress(maxPrice)
 
         // Restablecer valores de las checkBox
         binding.cbPagadas.isChecked = false
@@ -221,7 +216,38 @@ class FilterActivity : AppCompatActivity() {
         binding.cbPlanPago.isChecked = false
     }
 
-    private fun cargarFiltros(filter: Filter) {
+    // Función para guardar el estado de los filtros en SharedPreferences
+    private fun saveFilterStatus(filter: Filter) {
+        // Obtenemos el objeto SharedPreferences
+        val preferences = getPreferences(MODE_PRIVATE)
+
+        val gson = Gson()
+        val jsonFilter = gson.toJson(filter)
+
+        // Guardar el JSON resultante en SharedPreferences con la clave "ESTADO_FILTRO"
+        preferences.edit().putString("ESTADO_FILTRO", jsonFilter).apply()
+    }
+
+    // Función para aplicar los filtros guardados desde SharedPreferences
+    private fun applySavedFilters() {
+        // Obtenemos las SharedPrefereces
+        val preferences = getPreferences(MODE_PRIVATE)
+        // Obtenemos el JSON cuya clave es "ESTADO_FILTRO"
+        val jsonFilter = preferences.getString("ESTADO_FILTRO", null)
+
+        // Verificar si se ha encontrado una cadena JSON
+        if (jsonFilter != null) {
+            val gson = Gson()
+            filter = gson.fromJson(jsonFilter, Filter::class.java)
+            // Si el objeto filtro no es nulo cargar los filtros
+            filter?.let { nonNullFilter ->
+                loadFilters(nonNullFilter)
+            }
+        }
+    }
+
+    // Función para cargar los filtros
+    private fun loadFilters(filter: Filter) {
         binding.btnFechaDesde.text = filter.fechaMin
         binding.btnFechaHasta.text = filter.fechaMax
         binding.slider.progress = filter.importe.toInt()
@@ -232,7 +258,9 @@ class FilterActivity : AppCompatActivity() {
         binding.cbPlanPago.isChecked = filter.estado[PLAN_PAGO] ?: false
     }
 
-    private fun actualizarSharedPreferences() {
+    // Función para actualizar SharedPreferences con los filtros actuales
+    private fun uploadSharedPreferences() {
+        // Obtenemos todos los datos que necesitamos y los almacenaremos en un objeto filtro
         val slider = binding.slider.progress.toDouble()
         val checkBoxes = hashMapOf(
             PAGADAS to binding.cbPagadas.isChecked,
@@ -241,10 +269,11 @@ class FilterActivity : AppCompatActivity() {
             PENDIENTES_PAGO to binding.cbPendientesPago.isChecked,
             PLAN_PAGO to binding.cbPlanPago.isChecked
         )
-        val fechaMin = binding.btnFechaDesde.text.toString()
-        val fechaMax = binding.btnFechaHasta.text.toString()
-        filtro = Filter(fechaMax, fechaMin, slider, checkBoxes)
+        val minDate = binding.btnFechaDesde.text.toString()
+        val maxDate = binding.btnFechaHasta.text.toString()
+        filter = Filter(maxDate, minDate, slider, checkBoxes)
 
-        guardarEstadoFiltros(filtro!!)
+        // Guardar el estado actual de los filtros en las Sharedreferences
+        saveFilterStatus(filter!!)
     }
 }
