@@ -32,8 +32,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// TODO: Hacer que se guarden los filtros y pasarlos al volver a la pantalla de filtros desde la MainActivity (SharedPreferences)
-// TODO: Lo mismo de arriba con la listra filtrada
 // TODO: Organizar las clases en carpetas mejor y refactorizar buscando mejorar el codigo
 
 @AndroidEntryPoint

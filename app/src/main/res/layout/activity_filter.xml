@@ -33,7 +33,7 @@
                 android:id="@+id/tvFechaEmision"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="40dp"
                 android:layout_marginTop="10dp"
                 android:text="@string/titulo_fecha_emision"
                 android:textColor="@color/black"

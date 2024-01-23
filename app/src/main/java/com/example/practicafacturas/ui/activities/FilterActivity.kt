@@ -26,7 +26,6 @@ import java.util.Locale
 class FilterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFilterBinding
-    // Obtenemos los datos al pasar de una actividad a otra
     private var maxImporte = 0
     private var filtro: Filter? = null
 
@@ -43,6 +42,26 @@ class FilterActivity : AppCompatActivity() {
         supportActionBar?.setTitle(R.string.filterActivity_titulo)
     }
 
+    // Crear el menu para ir a la actividad principal
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_filter_view, menu)
+        return true
+    }
+
+    // Funcionalidad del menu para ir a la actividad principal sin hacer nada
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.cerrar_menu -> {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    // Funcion para inicializar los componentes de la clase
     private fun inicializarComponentes() {
         inicializarCalendario()
         inicializarSlider()
@@ -65,25 +84,6 @@ class FilterActivity : AppCompatActivity() {
 
         // Funcionalidad al darle al boton de eliminar filtros
         binding.btnEliminar.setOnClickListener { eliminarValores() }
-    }
-
-    // Crear el menu para ir a la actividad principal
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_filter_view, menu)
-        return true
-    }
-
-    // Funcionalidad del menu para ir a la actividad principal sin hacer nada
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.cerrar_menu -> {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
     }
 
     private fun inicializarCalendario() {
@@ -120,7 +120,7 @@ class FilterActivity : AppCompatActivity() {
         val gson = Gson()
         val filtroJson = gson.toJson(filter)
 
-        preferences.edit().putString("ESTADO_FILTROS", filtroJson).apply()
+        preferences.edit().putString("ESTADO_FILTRO", filtroJson).apply()
     }
 
     // Funcion para la fecha de los botones
