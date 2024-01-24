@@ -139,7 +139,7 @@ class FilterActivity : AppCompatActivity() {
     // Funcion para inicializar el slider de importe
     private fun initializateSlider() {
         // Obtenemos el mayor importe de la MainActivity
-        maxPrice = intent.getDoubleExtra("maxImporte", 0.0).toInt() + 1
+        maxPrice = intent.getDoubleExtra("maxPrice", 0.0).toInt() + 1
 
         // Establecer los valores de los TextView para el slider
         binding.tvMinSlider.text = "${getString(R.string.txt_min_valor_slider)} €"
