@@ -2,39 +2,39 @@
     <string name="app_name">PracticaFacturas</string>
 
     <!-- Titulos de la toolbar -->
-    <string name="mainActivity_titulo">Facturas</string>
-    <string name="filterActivity_titulo">Filtrar facturas</string>
+    <string name="mainActivity_title">Facturas</string>
+    <string name="filterActivity_title">Filtrar facturas</string>
 
-    <!-- MainActivity (No se si es necesario) -->
-    <string name="factura_estado">Pendiente de pago</string>
-    <string name="txt_vacio">No hay facturas</string>
+    <!-- MainActivity -->
+    <string name="invoive_status">Pendiente de pago</string>
+    <string name="empty_txt">No hay facturas</string>
 
     <!-- AlertDialog al pulsar sobre una factura -->
-    <string name="aDialog_titulo">Información</string>
-    <string name="aDialog_mensaje">Esta funcionalidad aún no está disponible</string>
-    <string name="aDialog_boton">Cerrar</string>
+    <string name="aDialog_title">Información</string>
+    <string name="aDialog_message">Esta funcionalidad aún no está disponible</string>
+    <string name="aDialog_button">Cerrar</string>
 
     <!-- FilterActivity titulos -->
-    <string name="titulo_fecha_emision">Con fecha de emisión</string>
-    <string name="titulo_importe">Por un importe</string>
-    <string name="titulo_estado">Por estado</string>
+    <string name="title_date_issue">Con fecha de emisión</string>
+    <string name="title_price">Por un importe</string>
+    <string name="title_status">Por estado</string>
 
     <!-- FilterActivity textViews -->
-    <string name="txt_desde">Desde:</string>
-    <string name="txt_hasta">Hasta:</string>
+    <string name="txt_from_date">Desde:</string>
+    <string name="txt_to_date">Hasta:</string>
 
     <!-- FilterActivity slider -->
-    <string name="txt_min_valor_slider">0</string>
+    <string name="txt_min_value_slider">0</string>
 
     <!-- FilterActivity checkboxes -->
-    <string name="chBox_pagadas">Pagadas</string>
-    <string name="chBox_anuladas">Anuladas</string>
-    <string name="chBox_cFija">Cuota Fija</string>
-    <string name="chBox_pendientePago">Pendientes de pago</string>
-    <string name="chBox_planPago">Plan de pago</string>
+    <string name="chBox_paid">Pagadas</string>
+    <string name="chBox_canceled">Anuladas</string>
+    <string name="chBox_fixed_fee">Cuota Fija</string>
+    <string name="chBox_pending_payment">Pendientes de pago</string>
+    <string name="chBox_payment_plan">Plan de pago</string>
 
     <!-- FilterActivity botones -->
-    <string name="btn_fecha">día/mes/año</string>
-    <string name="btn_aplicar">Aplicar</string>
-    <string name="btn_eliminar">Eliminar filtros</string>
+    <string name="btn_date">día/mes/año</string>
+    <string name="btn_apply_filters">Aplicar</string>
+    <string name="btn_delete_filters">Eliminar filtros</string>
 </resources>

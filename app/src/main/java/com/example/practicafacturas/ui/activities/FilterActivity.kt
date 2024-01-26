@@ -90,7 +90,7 @@ class FilterActivity : AppCompatActivity() {
     private fun initializateToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.setTitle(R.string.filterActivity_titulo)
+        supportActionBar?.setTitle(R.string.filterActivity_title)
     }
 
     // Inicializamos los botones que funcionan como datePicker
@@ -142,7 +142,7 @@ class FilterActivity : AppCompatActivity() {
         maxPrice = intent.getDoubleExtra("maxPrice", 0.0).toInt() + 1
 
         // Establecer los valores de los TextView para el slider
-        binding.tvMinSlider.text = "${getString(R.string.txt_min_valor_slider)} €"
+        binding.tvMinSlider.text = "${getString(R.string.txt_min_value_slider)} €"
         binding.tvMaxSlider.text = "${maxPrice} €"
         binding.tvValorActual.text = "${maxPrice} €"
 
@@ -187,11 +187,11 @@ class FilterActivity : AppCompatActivity() {
             PENDIENTES_PAGO to binding.cbPendientesPago.isChecked,
             PLAN_PAGO to binding.cbPlanPago.isChecked
         )
-        var minDate = binding.btnFechaDesde.text.toString()
-        var maxDate = binding.btnFechaHasta.text.toString()
-        var price = binding.slider.progress.toDouble()
+        val minDate = binding.btnFechaDesde.text.toString()
+        val maxDate = binding.btnFechaHasta.text.toString()
+        val price = binding.slider.progress.toDouble()
         // Objeto filtro con todos los valores obtenidos
-        var filtro = Filter(maxDate, minDate, price, chBoxStatus)
+        val filtro = Filter(maxDate, minDate, price, chBoxStatus)
 
         // Guardamos los estados de los filtros
         saveFilterStatus(filtro)
@@ -202,8 +202,8 @@ class FilterActivity : AppCompatActivity() {
     // Función que restablece los valores de los filtros
     private fun deleteValues() {
         // Resetear valores de los botones de fecha
-        binding.btnFechaDesde.setText(R.string.btn_fecha)
-        binding.btnFechaHasta.setText(R.string.btn_fecha)
+        binding.btnFechaDesde.setText(R.string.btn_date)
+        binding.btnFechaHasta.setText(R.string.btn_date)
 
         // Restablecer valor del slider al máximo
         binding.slider.setProgress(maxPrice)

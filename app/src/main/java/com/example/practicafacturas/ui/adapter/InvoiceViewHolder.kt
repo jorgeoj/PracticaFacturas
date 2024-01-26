@@ -16,7 +16,7 @@ class InvoiceViewHolder (view: View): ViewHolder(view) {
     fun render(item: Invoice, onClickListener: (Invoice) -> Unit) {
         item.fecha?.let { binding.tvFecha.text = formatearFecha(it) }
         if (item.descEstado == "Pendiente de pago") {
-            binding.tvEstado.setText(R.string.factura_estado)
+            binding.tvEstado.setText(R.string.invoive_status)
         }else{
             binding.tvEstado.text = " "
         }

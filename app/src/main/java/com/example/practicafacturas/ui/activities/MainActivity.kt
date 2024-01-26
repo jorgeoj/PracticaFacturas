@@ -16,11 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practicafacturas.R
 import com.example.practicafacturas.databinding.ActivityMainBinding
 import com.example.practicafacturas.model.Invoice
-import com.example.practicafacturas.ui.Constants.Companion.ANULADAS
-import com.example.practicafacturas.ui.Constants.Companion.CUOTA_FIJA
-import com.example.practicafacturas.ui.Constants.Companion.PAGADAS
-import com.example.practicafacturas.ui.Constants.Companion.PENDIENTES_PAGO
-import com.example.practicafacturas.ui.Constants.Companion.PLAN_PAGO
 import com.example.practicafacturas.ui.Filter
 import com.example.practicafacturas.ui.adapter.InvoiceAdapter
 import com.example.practicafacturas.viewmodel.InvoiceViewModel
@@ -94,7 +89,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializateToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.setTitle(R.string.mainActivity_titulo)
+        supportActionBar?.setTitle(R.string.mainActivity_title)
     }
 
     // Configurar el RecyclerView y su adaptador dentro del ViewModel
@@ -185,9 +180,9 @@ class MainActivity : AppCompatActivity() {
     // Funcion alertDialog al pulsar en una factura
     private fun onItemSelected() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.aDialog_titulo)
-        builder.setMessage(R.string.aDialog_mensaje)
-        builder.setPositiveButton(R.string.aDialog_boton) { dialog, _ ->
+        builder.setTitle(R.string.aDialog_title)
+        builder.setMessage(R.string.aDialog_message)
+        builder.setPositiveButton(R.string.aDialog_button) { dialog, _ ->
             dialog.dismiss()
         }
 
@@ -207,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         val auxList = ArrayList<Invoice>()
 
         // Verificar si se han seleccionado fechas válidas
-        if (minDate != getString(R.string.btn_fecha) && maxDate != getString(R.string.btn_fecha)) {
+        if (minDate != getString(R.string.btn_date) && maxDate != getString(R.string.btn_date)) {
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) // Para parsear las fechas
 
             val dateMinimum: Date? = sdf.parse(minDate)

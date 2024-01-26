@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/titulo_fecha_emision"
+                android:text="@string/title_date_issue"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="@string/txt_desde"
+                android:text="@string/txt_from_date"
                 app:layout_constraintStart_toStartOf="@+id/tvFechaEmision"
                 app:layout_constraintTop_toBottomOf="@+id/tvFechaEmision" />
 
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="150dp"
-                android:text="@string/txt_hasta"
+                android:text="@string/txt_to_date"
                 app:layout_constraintBottom_toBottomOf="@+id/tvDesde"
                 app:layout_constraintStart_toEndOf="@+id/tvDesde"
                 app:layout_constraintTop_toTopOf="@+id/tvDesde" />
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/light_grey"
-                android:text="@string/btn_fecha"
+                android:text="@string/btn_date"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black"
                 app:layout_constraintStart_toStartOf="@+id/tvDesde"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/light_grey"
-                android:text="@string/btn_fecha"
+                android:text="@string/btn_date"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black"
                 app:layout_constraintStart_toStartOf="@+id/tvHasta"
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/titulo_importe"
+                android:text="@string/title_price"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/tvFechaEmision"
                 app:layout_constraintTop_toTopOf="@+id/view" />
@@ -157,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/titulo_estado"
+                android:text="@string/title_status"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/tvFechaEmision"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
@@ -167,7 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@string/chBox_pagadas"
+                android:text="@string/chBox_paid"
                 app:layout_constraintStart_toStartOf="@+id/tvEstadoTitulo"
                 app:layout_constraintTop_toBottomOf="@+id/tvEstadoTitulo" />
 
@@ -175,7 +175,7 @@
                 android:id="@+id/cbAnuladas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/chBox_anuladas"
+                android:text="@string/chBox_canceled"
                 app:layout_constraintStart_toStartOf="@+id/cbPagadas"
                 app:layout_constraintTop_toBottomOf="@+id/cbPagadas" />
 
@@ -183,7 +183,7 @@
                 android:id="@+id/cbCuotaFija"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/chBox_cFija"
+                android:text="@string/chBox_fixed_fee"
                 app:layout_constraintStart_toStartOf="@+id/cbAnuladas"
                 app:layout_constraintTop_toBottomOf="@+id/cbAnuladas" />
 
@@ -191,7 +191,7 @@
                 android:id="@+id/cbPendientesPago"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/chBox_pendientePago"
+                android:text="@string/chBox_pending_payment"
                 app:layout_constraintStart_toStartOf="@+id/cbCuotaFija"
                 app:layout_constraintTop_toBottomOf="@+id/cbCuotaFija" />
 
@@ -199,7 +199,7 @@
                 android:id="@+id/cbPlanPago"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/chBox_planPago"
+                android:text="@string/chBox_payment_plan"
                 app:layout_constraintStart_toStartOf="@+id/cbPendientesPago"
                 app:layout_constraintTop_toBottomOf="@+id/cbPendientesPago" />
 
@@ -216,7 +216,7 @@
         android:layout_marginStart="48dp"
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/btn_aplicar"
+        android:text="@string/btn_apply_filters"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/btnEliminar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -228,7 +228,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="@string/btn_eliminar"
+        android:text="@string/btn_delete_filters"
         android:textAllCaps="false"
         android:textColor="@color/dark_grey"
         app:layout_constraintBottom_toBottomOf="parent"

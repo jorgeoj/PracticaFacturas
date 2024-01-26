@@ -30,7 +30,7 @@
         android:id="@+id/tvVacio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/txt_vacio"
+        android:text="@string/empty_txt"
         android:textStyle="bold"
         android:textSize="24dp"
         android:textColor="@color/grey"
