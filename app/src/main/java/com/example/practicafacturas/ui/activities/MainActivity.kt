@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         initializateToolbar()
 
         // Creamos un adaptador de facturas con una función cuando se selecciona una factura
-        invoiceAdapter = InvoiceAdapter { invoice -> onItemSelected() }
+        invoiceAdapter = InvoiceAdapter { onItemSelected() }
 
         // Inicializamos el viewModel y el de la actividad
         initViewModel()
@@ -52,14 +52,14 @@ class MainActivity : AppCompatActivity() {
 
         // Configurar el administrador de diseño para el RecyclerView
         val layoutManager = LinearLayoutManager(this)
-        binding.rvFacturas.layoutManager = layoutManager
+        binding.rvInvoices.layoutManager = layoutManager
 
         // Estetico: divisor para cada elemento del recyclerView
         val dividerItemDecoration = DividerItemDecoration(
-            binding.rvFacturas.context,
+            binding.rvInvoices.context,
             layoutManager.orientation
         )
-        binding.rvFacturas.addItemDecoration(dividerItemDecoration)
+        binding.rvInvoices.addItemDecoration(dividerItemDecoration)
     }
 
     // Crear el menu para ir a la actividad de los filtros
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     // Configurar el RecyclerView y su adaptador dentro del ViewModel
     private fun initViewModel() {
-        binding.rvFacturas.apply {
+        binding.rvInvoices.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             invoiceAdapter = InvoiceAdapter {
                 invoice -> onItemSelected()
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity() {
 
                 // Mostrar textView si la lista filtrada es vacía
                 if (invoiceList.isEmpty()) {
-                    binding.tvVacio.visibility = View.VISIBLE
+                    binding.tvEmpty.visibility = View.VISIBLE
                 }
 
                 // Actualizar adaptador con la lista filtrada

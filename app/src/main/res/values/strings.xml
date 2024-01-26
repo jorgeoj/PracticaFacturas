@@ -28,7 +28,7 @@
 
     <!-- FilterActivity checkboxes -->
     <string name="chBox_paid">Pagadas</string>
-    <string name="chBox_canceled">Anuladas</string>
+    <string name="chBox_cancelled">Anuladas</string>
     <string name="chBox_fixed_fee">Cuota Fija</string>
     <string name="chBox_pending_payment">Pendientes de pago</string>
     <string name="chBox_payment_plan">Plan de pago</string>

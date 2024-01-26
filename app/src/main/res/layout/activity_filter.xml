@@ -20,7 +20,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnAplicar"
+        app:layout_constraintBottom_toTopOf="@+id/btnApply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/includeFilterActivity">
@@ -30,7 +30,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tvFechaEmision"
+                android:id="@+id/tvTitleDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
@@ -43,26 +43,26 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvDesde"
+                android:id="@+id/tvFrom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="@string/txt_from_date"
-                app:layout_constraintStart_toStartOf="@+id/tvFechaEmision"
-                app:layout_constraintTop_toBottomOf="@+id/tvFechaEmision" />
+                app:layout_constraintStart_toStartOf="@+id/tvTitleDate"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleDate" />
 
             <TextView
-                android:id="@+id/tvHasta"
+                android:id="@+id/tvTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="150dp"
                 android:text="@string/txt_to_date"
-                app:layout_constraintBottom_toBottomOf="@+id/tvDesde"
-                app:layout_constraintStart_toEndOf="@+id/tvDesde"
-                app:layout_constraintTop_toTopOf="@+id/tvDesde" />
+                app:layout_constraintBottom_toBottomOf="@+id/tvFrom"
+                app:layout_constraintStart_toEndOf="@+id/tvFrom"
+                app:layout_constraintTop_toTopOf="@+id/tvFrom" />
 
             <Button
-                android:id="@+id/btnFechaDesde"
+                android:id="@+id/btnDateFrom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -70,11 +70,11 @@
                 android:text="@string/btn_date"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black"
-                app:layout_constraintStart_toStartOf="@+id/tvDesde"
-                app:layout_constraintTop_toBottomOf="@+id/tvDesde" />
+                app:layout_constraintStart_toStartOf="@+id/tvFrom"
+                app:layout_constraintTop_toBottomOf="@+id/tvFrom" />
 
             <Button
-                android:id="@+id/btnFechaHasta"
+                android:id="@+id/btnDateTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -82,8 +82,8 @@
                 android:text="@string/btn_date"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black"
-                app:layout_constraintStart_toStartOf="@+id/tvHasta"
-                app:layout_constraintTop_toBottomOf="@+id/tvHasta" />
+                app:layout_constraintStart_toStartOf="@+id/tvTo"
+                app:layout_constraintTop_toBottomOf="@+id/tvTo" />
 
             <!-- View como linea separadora -->
             <View
@@ -92,16 +92,16 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="15dp"
                 android:background="@color/light_grey"
-                app:layout_constraintTop_toBottomOf="@+id/btnFechaDesde" />
+                app:layout_constraintTop_toBottomOf="@+id/btnDateFrom" />
 
             <TextView
-                android:id="@+id/tvImporteTitulo"
+                android:id="@+id/tvTitlePrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/title_price"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/tvFechaEmision"
+                app:layout_constraintStart_toStartOf="@+id/tvTitleDate"
                 app:layout_constraintTop_toTopOf="@+id/view" />
 
             <TextView
@@ -110,11 +110,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="val min"
-                app:layout_constraintStart_toStartOf="@+id/tvImporteTitulo"
-                app:layout_constraintTop_toBottomOf="@+id/tvImporteTitulo" />
+                app:layout_constraintStart_toStartOf="@+id/tvTitlePrice"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitlePrice" />
 
             <TextView
-                android:id="@+id/tvValorActual"
+                android:id="@+id/tvCurrentValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Val slider"
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:text="val max"
                 app:layout_constraintBottom_toBottomOf="@+id/tvMinSlider"
-                app:layout_constraintEnd_toEndOf="@+id/btnFechaHasta"
+                app:layout_constraintEnd_toEndOf="@+id/btnDateTo"
                 app:layout_constraintTop_toTopOf="@+id/tvMinSlider" />
 
             <SeekBar
@@ -153,55 +153,55 @@
                 app:layout_constraintTop_toBottomOf="@+id/slider" />
 
             <TextView
-                android:id="@+id/tvEstadoTitulo"
+                android:id="@+id/tvTitleStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/title_status"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/tvFechaEmision"
+                app:layout_constraintStart_toStartOf="@+id/tvTitleDate"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
 
             <CheckBox
-                android:id="@+id/cbPagadas"
+                android:id="@+id/cbPaid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/chBox_paid"
-                app:layout_constraintStart_toStartOf="@+id/tvEstadoTitulo"
-                app:layout_constraintTop_toBottomOf="@+id/tvEstadoTitulo" />
+                app:layout_constraintStart_toStartOf="@+id/tvTitleStatus"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleStatus" />
 
             <CheckBox
-                android:id="@+id/cbAnuladas"
+                android:id="@+id/cbCancelled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/chBox_canceled"
-                app:layout_constraintStart_toStartOf="@+id/cbPagadas"
-                app:layout_constraintTop_toBottomOf="@+id/cbPagadas" />
+                android:text="@string/chBox_cancelled"
+                app:layout_constraintStart_toStartOf="@+id/cbPaid"
+                app:layout_constraintTop_toBottomOf="@+id/cbPaid" />
 
             <CheckBox
-                android:id="@+id/cbCuotaFija"
+                android:id="@+id/cbFixedFee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/chBox_fixed_fee"
-                app:layout_constraintStart_toStartOf="@+id/cbAnuladas"
-                app:layout_constraintTop_toBottomOf="@+id/cbAnuladas" />
+                app:layout_constraintStart_toStartOf="@+id/cbCancelled"
+                app:layout_constraintTop_toBottomOf="@+id/cbCancelled" />
 
             <CheckBox
-                android:id="@+id/cbPendientesPago"
+                android:id="@+id/cbPendingPayment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/chBox_pending_payment"
-                app:layout_constraintStart_toStartOf="@+id/cbCuotaFija"
-                app:layout_constraintTop_toBottomOf="@+id/cbCuotaFija" />
+                app:layout_constraintStart_toStartOf="@+id/cbFixedFee"
+                app:layout_constraintTop_toBottomOf="@+id/cbFixedFee" />
 
             <CheckBox
-                android:id="@+id/cbPlanPago"
+                android:id="@+id/cbPaymentPlan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/chBox_payment_plan"
-                app:layout_constraintStart_toStartOf="@+id/cbPendientesPago"
-                app:layout_constraintTop_toBottomOf="@+id/cbPendientesPago" />
+                app:layout_constraintStart_toStartOf="@+id/cbPendingPayment"
+                app:layout_constraintTop_toBottomOf="@+id/cbPendingPayment" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -210,7 +210,7 @@
 
     <!-- Botones de aplicar y eliminar filtros -->
     <Button
-        android:id="@+id/btnAplicar"
+        android:id="@+id/btnApply"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="48dp"
@@ -218,12 +218,12 @@
         android:layout_marginBottom="8dp"
         android:text="@string/btn_apply_filters"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/btnEliminar"
+        app:layout_constraintBottom_toTopOf="@+id/btnDelete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btnEliminar"
+        android:id="@+id/btnDelete"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -232,7 +232,7 @@
         android:textAllCaps="false"
         android:textColor="@color/dark_grey"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btnAplicar"
-        app:layout_constraintStart_toStartOf="@+id/btnAplicar"/>
+        app:layout_constraintEnd_toEndOf="@+id/btnApply"
+        app:layout_constraintStart_toStartOf="@+id/btnApply"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

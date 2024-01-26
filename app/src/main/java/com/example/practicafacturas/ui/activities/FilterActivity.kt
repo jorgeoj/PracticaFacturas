@@ -77,13 +77,13 @@ class FilterActivity : AppCompatActivity() {
         }
 
         // Funcionalidad al darle al botón de aplicar los filtros
-        binding.btnAplicar.setOnClickListener {
+        binding.btnApply.setOnClickListener {
             uploadSharedPreferences()
             filterValues()
         }
 
         // Funcionalidad al darle al boton de eliminar filtros
-        binding.btnEliminar.setOnClickListener { deleteValues() }
+        binding.btnDelete.setOnClickListener { deleteValues() }
     }
 
     // Configurar la toolbar
@@ -96,8 +96,8 @@ class FilterActivity : AppCompatActivity() {
     // Inicializamos los botones que funcionan como datePicker
     private fun initializateCalendar() {
         // Funcionalidad botones de fecha
-        binding.btnFechaDesde.setOnClickListener { obtainDate(binding.btnFechaDesde, false) }
-        binding.btnFechaHasta.setOnClickListener { obtainDate(binding.btnFechaHasta, true, minDate = obtainMinDateAux()) }
+        binding.btnDateFrom.setOnClickListener { obtainDate(binding.btnDateFrom, false) }
+        binding.btnDateTo.setOnClickListener { obtainDate(binding.btnDateTo, true, minDate = obtainMinDateAux()) }
     }
 
     // Funcion para manejar la fecha seleccionada en los botones
@@ -123,7 +123,7 @@ class FilterActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
         // Obtiene la fecha desde tu botón
-        val selectedDateFrom = binding.btnFechaDesde.text.toString()
+        val selectedDateFrom = binding.btnDateFrom.text.toString()
 
         try {
             // Parsea la fecha y la devuelve como tipo Date
@@ -144,7 +144,7 @@ class FilterActivity : AppCompatActivity() {
         // Establecer los valores de los TextView para el slider
         binding.tvMinSlider.text = "${getString(R.string.txt_min_value_slider)} €"
         binding.tvMaxSlider.text = "${maxPrice} €"
-        binding.tvValorActual.text = "${maxPrice} €"
+        binding.tvCurrentValue.text = "${maxPrice} €"
 
         // Configurar el slider
         controlSlider()
@@ -161,7 +161,7 @@ class FilterActivity : AppCompatActivity() {
         binding.slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             // Actualizar el valor actual en el TextView según el progreso del slider
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                binding.tvValorActual.text = "${progress} €"
+                binding.tvCurrentValue.text = "${progress} €"
             }
             // Acciones cuando se inicia la interacción con el slider
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -181,14 +181,14 @@ class FilterActivity : AppCompatActivity() {
 
         // Guardamos los valores en un objeto filtro para despues pasarlo a la otra actividad
         val chBoxStatus = hashMapOf(
-            PAGADAS to binding.cbPagadas.isChecked,
-            ANULADAS to binding.cbAnuladas.isChecked,
-            CUOTA_FIJA to binding.cbCuotaFija.isChecked,
-            PENDIENTES_PAGO to binding.cbPendientesPago.isChecked,
-            PLAN_PAGO to binding.cbPlanPago.isChecked
+            PAGADAS to binding.cbPaid.isChecked,
+            ANULADAS to binding.cbCancelled.isChecked,
+            CUOTA_FIJA to binding.cbFixedFee.isChecked,
+            PENDIENTES_PAGO to binding.cbPendingPayment.isChecked,
+            PLAN_PAGO to binding.cbPaymentPlan.isChecked
         )
-        val minDate = binding.btnFechaDesde.text.toString()
-        val maxDate = binding.btnFechaHasta.text.toString()
+        val minDate = binding.btnDateFrom.text.toString()
+        val maxDate = binding.btnDateTo.text.toString()
         val price = binding.slider.progress.toDouble()
         // Objeto filtro con todos los valores obtenidos
         val filtro = Filter(maxDate, minDate, price, chBoxStatus)
@@ -202,18 +202,18 @@ class FilterActivity : AppCompatActivity() {
     // Función que restablece los valores de los filtros
     private fun deleteValues() {
         // Resetear valores de los botones de fecha
-        binding.btnFechaDesde.setText(R.string.btn_date)
-        binding.btnFechaHasta.setText(R.string.btn_date)
+        binding.btnDateFrom.setText(R.string.btn_date)
+        binding.btnDateTo.setText(R.string.btn_date)
 
         // Restablecer valor del slider al máximo
         binding.slider.setProgress(maxPrice)
 
         // Restablecer valores de las checkBox
-        binding.cbPagadas.isChecked = false
-        binding.cbAnuladas.isChecked = false
-        binding.cbCuotaFija.isChecked = false
-        binding.cbPendientesPago.isChecked = false
-        binding.cbPlanPago.isChecked = false
+        binding.cbPaid.isChecked = false
+        binding.cbCancelled.isChecked = false
+        binding.cbFixedFee.isChecked = false
+        binding.cbPendingPayment.isChecked = false
+        binding.cbPaymentPlan.isChecked = false
     }
 
     // Función para guardar el estado de los filtros en SharedPreferences
@@ -248,14 +248,14 @@ class FilterActivity : AppCompatActivity() {
 
     // Función para cargar los filtros
     private fun loadFilters(filter: Filter) {
-        binding.btnFechaDesde.text = filter.fechaMin
-        binding.btnFechaHasta.text = filter.fechaMax
+        binding.btnDateFrom.text = filter.fechaMin
+        binding.btnDateTo.text = filter.fechaMax
         binding.slider.progress = filter.importe.toInt()
-        binding.cbPagadas.isChecked = filter.estado[PAGADAS] ?: false
-        binding.cbAnuladas.isChecked = filter.estado[ANULADAS] ?: false
-        binding.cbCuotaFija.isChecked = filter.estado[CUOTA_FIJA] ?: false
-        binding.cbPendientesPago.isChecked = filter.estado[PENDIENTES_PAGO] ?: false
-        binding.cbPlanPago.isChecked = filter.estado[PLAN_PAGO] ?: false
+        binding.cbPaid.isChecked = filter.estado[PAGADAS] ?: false
+        binding.cbCancelled.isChecked = filter.estado[ANULADAS] ?: false
+        binding.cbFixedFee.isChecked = filter.estado[CUOTA_FIJA] ?: false
+        binding.cbPendingPayment.isChecked = filter.estado[PENDIENTES_PAGO] ?: false
+        binding.cbPaymentPlan.isChecked = filter.estado[PLAN_PAGO] ?: false
     }
 
     // Función para actualizar SharedPreferences con los filtros actuales
@@ -263,14 +263,14 @@ class FilterActivity : AppCompatActivity() {
         // Obtenemos todos los datos que necesitamos y los almacenaremos en un objeto filtro
         val slider = binding.slider.progress.toDouble()
         val checkBoxes = hashMapOf(
-            PAGADAS to binding.cbPagadas.isChecked,
-            ANULADAS to binding.cbAnuladas.isChecked,
-            CUOTA_FIJA to binding.cbCuotaFija.isChecked,
-            PENDIENTES_PAGO to binding.cbPendientesPago.isChecked,
-            PLAN_PAGO to binding.cbPlanPago.isChecked
+            PAGADAS to binding.cbPaid.isChecked,
+            ANULADAS to binding.cbCancelled.isChecked,
+            CUOTA_FIJA to binding.cbFixedFee.isChecked,
+            PENDIENTES_PAGO to binding.cbPendingPayment.isChecked,
+            PLAN_PAGO to binding.cbPaymentPlan.isChecked
         )
-        val minDate = binding.btnFechaDesde.text.toString()
-        val maxDate = binding.btnFechaHasta.text.toString()
+        val minDate = binding.btnDateFrom.text.toString()
+        val maxDate = binding.btnDateTo.text.toString()
         filter = Filter(maxDate, minDate, slider, checkBoxes)
 
         // Guardar el estado actual de los filtros en las Sharedreferences
