@@ -1,10 +1,9 @@
-package com.example.practicafacturas.viewmodel
+package com.example.practicafacturas.ui.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.practicafacturas.model.Invoice
-import com.example.practicafacturas.network.InvoiceRepository
+import com.example.practicafacturas.data.database.Invoice
+import com.example.practicafacturas.data.repository.InvoiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

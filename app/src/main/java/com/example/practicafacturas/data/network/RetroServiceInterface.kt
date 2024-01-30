@@ -1,6 +1,6 @@
-package com.example.practicafacturas.network
+package com.example.practicafacturas.data.network
 
-import com.example.practicafacturas.model.RepositoriesList
+import com.example.practicafacturas.data.network.model.RepositoriesList
 import retrofit2.Call
 import retrofit2.http.GET
 

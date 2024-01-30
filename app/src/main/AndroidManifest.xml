@@ -14,10 +14,10 @@
         android:theme="@style/Theme.PracticaFacturas"
         tools:targetApi="31">
         <activity
-            android:name=".ui.activities.FilterActivity"
+            android:name=".ui.view.activities.FilterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".ui.view.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

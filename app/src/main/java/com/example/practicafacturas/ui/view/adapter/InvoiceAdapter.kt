@@ -1,10 +1,10 @@
-package com.example.practicafacturas.ui.adapter
+package com.example.practicafacturas.ui.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practicafacturas.R
-import com.example.practicafacturas.model.Invoice
+import com.example.practicafacturas.data.database.Invoice
 
 class InvoiceAdapter(private val onCLickListener: (Invoice) -> Unit): RecyclerView.Adapter<InvoiceViewHolder>() {
 

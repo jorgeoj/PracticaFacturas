@@ -1,9 +1,9 @@
 package com.example.practicafacturas.di
 
 import android.content.Context
-import com.example.practicafacturas.database.InvoiceDao
-import com.example.practicafacturas.database.InvoiceDatabase
-import com.example.practicafacturas.network.RetroServiceInterface
+import com.example.practicafacturas.data.database.InvoiceDao
+import com.example.practicafacturas.data.database.InvoiceDatabase
+import com.example.practicafacturas.data.network.RetroServiceInterface
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

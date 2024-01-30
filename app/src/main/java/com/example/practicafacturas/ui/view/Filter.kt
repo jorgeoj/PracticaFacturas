@@ -1,4 +1,4 @@
-package com.example.practicafacturas.ui
+package com.example.practicafacturas.ui.view
 
 data class Filter(
     var fechaMax: String,

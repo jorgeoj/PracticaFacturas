@@ -1,4 +1,4 @@
-package com.example.practicafacturas.model
+package com.example.practicafacturas.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

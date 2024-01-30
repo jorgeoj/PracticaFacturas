@@ -1,4 +1,4 @@
-package com.example.practicafacturas.ui
+package com.example.practicafacturas.ui.view.constants
 
 class Constants {
     companion object {

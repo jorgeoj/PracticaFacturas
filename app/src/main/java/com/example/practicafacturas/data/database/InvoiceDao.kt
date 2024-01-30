@@ -1,11 +1,10 @@
-package com.example.practicafacturas.database
+package com.example.practicafacturas.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.practicafacturas.model.Invoice
 
 // Clase que proporciona metodos para interactuar con la BBDD
 @Dao

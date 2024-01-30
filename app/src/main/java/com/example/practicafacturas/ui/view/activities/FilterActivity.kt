@@ -1,4 +1,4 @@
-package com.example.practicafacturas.ui.activities
+package com.example.practicafacturas.ui.view.activities
 
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -12,12 +12,12 @@ import android.widget.SeekBar
 import androidx.appcompat.widget.Toolbar
 import com.example.practicafacturas.R
 import com.example.practicafacturas.databinding.ActivityFilterBinding
-import com.example.practicafacturas.ui.Constants.Companion.ANULADAS
-import com.example.practicafacturas.ui.Constants.Companion.CUOTA_FIJA
-import com.example.practicafacturas.ui.Constants.Companion.PAGADAS
-import com.example.practicafacturas.ui.Constants.Companion.PENDIENTES_PAGO
-import com.example.practicafacturas.ui.Constants.Companion.PLAN_PAGO
-import com.example.practicafacturas.ui.Filter
+import com.example.practicafacturas.ui.view.constants.Constants.Companion.ANULADAS
+import com.example.practicafacturas.ui.view.constants.Constants.Companion.CUOTA_FIJA
+import com.example.practicafacturas.ui.view.constants.Constants.Companion.PAGADAS
+import com.example.practicafacturas.ui.view.constants.Constants.Companion.PENDIENTES_PAGO
+import com.example.practicafacturas.ui.view.constants.Constants.Companion.PLAN_PAGO
+import com.example.practicafacturas.ui.view.Filter
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -48,14 +48,15 @@ class FilterActivity : AppCompatActivity() {
 
     // Funcionalidad del menu para ir a la actividad principal sin hacer nada
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.cerrar_menu -> {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

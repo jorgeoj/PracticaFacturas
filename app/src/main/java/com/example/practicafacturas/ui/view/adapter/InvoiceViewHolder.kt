@@ -1,11 +1,11 @@
-package com.example.practicafacturas.ui.adapter
+package com.example.practicafacturas.ui.view.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.practicafacturas.R
 
 import com.example.practicafacturas.databinding.BillItemBinding
-import com.example.practicafacturas.model.Invoice
+import com.example.practicafacturas.data.database.Invoice
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale

@@ -1,4 +1,4 @@
-package com.example.practicafacturas.ui.activities
+package com.example.practicafacturas.ui.view.activities
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practicafacturas.R
 import com.example.practicafacturas.databinding.ActivityMainBinding
-import com.example.practicafacturas.model.Invoice
-import com.example.practicafacturas.ui.Filter
-import com.example.practicafacturas.ui.adapter.InvoiceAdapter
-import com.example.practicafacturas.viewmodel.InvoiceViewModel
+import com.example.practicafacturas.data.database.Invoice
+import com.example.practicafacturas.ui.view.Filter
+import com.example.practicafacturas.ui.view.adapter.InvoiceAdapter
+import com.example.practicafacturas.ui.viewmodel.InvoiceViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, FilterActivity::class.java)
                 intent.putExtra("maxPrice", maxPrice)
                 if (filter != null) {
-                    var gson = Gson()
+                    val gson = Gson()
                     intent.putExtra("FILTRO_DATOS", gson.toJson(filter))
                 }
                 startActivity(intent)
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
     // Manejar la lista de facturas
     private fun handleInvoiceList(invoices: List<Invoice>) {
         // Obtenemos la lista filtrada de las sharedPreferences y verificamos si esta vacía o nula
-        var listWithFilter = getFilteredListSharedPreferences()
+        val listWithFilter = getFilteredListSharedPreferences()
 
         if (listWithFilter == null || listWithFilter.isEmpty()) {
             invoiceAdapter.setListInvoices(invoices) // Establecer lista original en el adaptador
@@ -209,7 +209,7 @@ class MainActivity : AppCompatActivity() {
             val maximumDate: Date? = sdf.parse(maxDate)
 
             for (bill in invoiceList) {
-                val date = sdf.parse(bill.fecha)!! // Obtenemos la fecha y la parseamos
+                val date = bill.fecha?.let { sdf.parse(it) }!! // Obtenemos la fecha y la parseamos
 
                 // Verificar si la fecha de la factura esta dentro del rango
                 if (date.after(dateMinimum) && date.before(maximumDate)) {
@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity() {
     // Funcion para los filtros del importe
     private fun checkFilterPrice(price: Double, invoiceList: List<Invoice>): List<Invoice> {
         // Creamos una lista auxiliar para después devolverla
-        var auxList = ArrayList<Invoice>()
+        val auxList = ArrayList<Invoice>()
         // Recorremos la lista y si el importe de la factura es menor que el importe seleccionado, la añadimos a la lista
         for (bill in invoiceList) {
             if (bill.importeOrdenacion!! < price) {
