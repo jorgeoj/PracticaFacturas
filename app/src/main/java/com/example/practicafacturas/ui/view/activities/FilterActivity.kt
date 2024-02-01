@@ -197,7 +197,10 @@ class FilterActivity : AppCompatActivity() {
         // Guardamos los estados de los filtros
         saveFilterStatus(filtro)
         intent.putExtra("datosFiltro", gson.toJson(filtro))
+
         startActivity(intent)
+
+        finish()
     }
 
     // Función que restablece los valores de los filtros

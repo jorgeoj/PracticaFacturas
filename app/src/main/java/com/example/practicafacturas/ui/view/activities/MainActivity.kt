@@ -85,6 +85,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Al presionar hacia atrás en MainActivity, cierra la aplicación
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+    }
+
     // Configurar la toolbar
     private fun initializateToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
