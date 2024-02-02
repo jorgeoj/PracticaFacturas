@@ -206,26 +206,38 @@ class MainActivity : AppCompatActivity() {
     private fun checkFilterDate(minDate: String, maxDate: String, invoiceList: List<Invoice>): List<Invoice> {
         // Lista auxiliar para devolverla despues
         val auxList = ArrayList<Invoice>()
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) // Para parsear las fechas
 
-        // Verificar si se han seleccionado fechas válidas
+        var dateMinimum: Date?
+        var maximumDate: Date?
+
+        // Verificar si se han seleccionado las dos fechas
         if (minDate != getString(R.string.btn_date) && maxDate != getString(R.string.btn_date)) {
-            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) // Para parsear las fechas
+            dateMinimum = sdf.parse(minDate)
+            maximumDate = sdf.parse(maxDate)
 
-            val dateMinimum: Date? = sdf.parse(minDate)
-            val maximumDate: Date? = sdf.parse(maxDate)
 
-            for (bill in invoiceList) {
-                val date = bill.fecha?.let { sdf.parse(it) }!! // Obtenemos la fecha y la parseamos
+        } else if (minDate != getString(R.string.btn_date) && maxDate == getString(R.string.btn_date)) {
+            dateMinimum = sdf.parse(minDate)
+            maximumDate = Date() // Obtiene la fecha actual
 
-                // Verificar si la fecha de la factura esta dentro del rango
-                if (date.after(dateMinimum) && date.before(maximumDate)) {
-                    auxList.add(bill)
-                }
-            }
+        } else if(minDate == getString(R.string.btn_date) && maxDate != getString(R.string.btn_date)) {
+            dateMinimum = Date(Long.MIN_VALUE) // Obtiene el minimo valor posible
+            maximumDate = sdf.parse(maxDate)
 
         } else {
-            return invoiceList
+            return invoiceList // Devuelve la lista recibida en caso que no cumpla ninguna condicion
         }
+
+        for (bill in invoiceList) {
+            val date = bill.fecha?.let { sdf.parse(it) }!! // Obtenemos la fecha y la parseamos
+
+            // Verificar si la fecha de la factura esta dentro del rango
+            if (date.after(dateMinimum) && date.before(maximumDate)) {
+                auxList.add(bill)
+            }
+        }
+
         return auxList
     }
 

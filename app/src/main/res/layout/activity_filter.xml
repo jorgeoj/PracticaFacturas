@@ -128,14 +128,15 @@
                 android:id="@+id/tvMaxSlider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
                 android:text="val max"
                 app:layout_constraintBottom_toBottomOf="@+id/tvMinSlider"
-                app:layout_constraintEnd_toEndOf="@+id/btnDateTo"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tvMinSlider" />
 
             <SeekBar
                 android:id="@+id/slider"
-                android:layout_width="360dp"
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="@+id/tvMaxSlider"

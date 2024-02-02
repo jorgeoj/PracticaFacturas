@@ -1,5 +1,6 @@
 package com.example.practicafacturas.ui.view.activities
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import com.example.practicafacturas.ui.view.constants.Constants.Companion.PENDIE
 import com.example.practicafacturas.ui.view.constants.Constants.Companion.PLAN_PAGO
 import com.example.practicafacturas.ui.view.Filter
 import com.google.gson.Gson
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -117,6 +119,7 @@ class FilterActivity : AppCompatActivity() {
         if(minDateRestriction) { minDate?.let { datePickerDialog.datePicker.minDate = it } }
         datePickerDialog.show()
     }
+
 
     // Funcion para obtener el valor del boton de la fecha minima permitida
     private fun obtainMinDateAux(): Long {
