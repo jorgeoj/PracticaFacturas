@@ -60,6 +60,10 @@ class MainActivity : AppCompatActivity() {
             layoutManager.orientation
         )
         binding.rvInvoices.addItemDecoration(dividerItemDecoration)
+
+        //establecer el estado del switch
+        val switchEstado = cargarEstadoSwitch()
+        binding.switchRetromock.isChecked = switchEstado
     }
 
     // Crear el menu para ir a la actividad de los filtros
@@ -78,12 +82,23 @@ class MainActivity : AppCompatActivity() {
                     val gson = Gson()
                     intent.putExtra("FILTRO_DATOS", gson.toJson(filter))
                 }
+
+                // TODO Mirar esto que me dijo Carlos y hacer pruebas
+                //startActivityForResult(intent, 20)
+
                 startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    // TODO Mirar esto que me dijo Carlos y hacer pruebas
+    /*
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+    */
 
     // Al presionar hacia atrás en MainActivity, cierra la aplicación
     override fun onBackPressed() {
@@ -116,7 +131,31 @@ class MainActivity : AppCompatActivity() {
         // Observar la lista de facturas en el ViewModel y manejar los cambios
         viewModel.getAllRepositoryList().observe(this) { invoices ->
             handleInvoiceList(invoices)
+
+            binding.switchRetromock.setOnClickListener {
+                val isChecked = binding.switchRetromock.isChecked
+                guardarEstadoSwitch(isChecked)
+                if (binding.switchRetromock.isChecked) {
+                    viewModel.changeService("ficticio")
+                    viewModel.makeApiCall()
+                } else {
+                    viewModel.changeService("real")
+                    viewModel.makeApiCall()
+                }
+            }
         }
+    }
+
+    // Método para guardar el estado del switch en las SharedPreferences
+    private fun guardarEstadoSwitch(estado: Boolean) {
+        val preferences = getPreferences(MODE_PRIVATE)
+        preferences.edit().putBoolean("switch_estado", estado).apply()
+    }
+
+    // Método para cargar el estado del switch desde las SharedPreferences
+    private fun cargarEstadoSwitch(): Boolean {
+        val preferences = getPreferences(MODE_PRIVATE)
+        return preferences.getBoolean("switch_estado", false) // El segundo parámetro es el valor por defecto
     }
 
     // Manejar la lista de facturas
@@ -175,6 +214,8 @@ class MainActivity : AppCompatActivity() {
                 // Mostrar textView si la lista filtrada es vacía
                 if (invoiceList.isEmpty()) {
                     binding.tvEmpty.visibility = View.VISIBLE
+                } else {
+                    binding.tvEmpty.visibility = View.INVISIBLE
                 }
 
                 // Actualizar adaptador con la lista filtrada

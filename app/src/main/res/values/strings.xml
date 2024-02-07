@@ -8,6 +8,7 @@
     <!-- MainActivity -->
     <string name="invoive_status">Pendiente de pago</string>
     <string name="empty_txt">No hay facturas</string>
+    <string name="txt_retromock_status">Activar retromock:</string>
 
     <!-- AlertDialog al pulsar sobre una factura -->
     <string name="aDialog_title">Información</string>

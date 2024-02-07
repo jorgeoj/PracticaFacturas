@@ -1,9 +1,12 @@
 package com.example.practicafacturas.di
 
 import android.content.Context
+import co.infinum.retromock.Retromock
+import com.example.practicafacturas.ResourceBodyFactory
 import com.example.practicafacturas.data.database.InvoiceDao
 import com.example.practicafacturas.data.database.InvoiceDatabase
-import com.example.practicafacturas.data.network.RetroServiceInterface
+import com.example.practicafacturas.data.network.APIRetrofitService
+import com.example.practicafacturas.data.network.APIRetromockService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,17 +38,35 @@ class AppModule {
     // URL para las solicitudes de retrofit
     val URL = "https://viewnextandroid.wiremockapi.cloud/"
 
-    // Método que proporciona una instancia del retrofit
+    // TODO: volver a comentar esto
     @Provides
     @Singleton
-    fun getRetroServiceInterface(retrofit: Retrofit): RetroServiceInterface {
-        return retrofit.create(RetroServiceInterface::class.java)
+    fun getRetrofit(retrofit: Retrofit): APIRetrofitService {
+        return retrofit.create(APIRetrofitService::class.java)
+
+    }
+
+    @Provides
+    @Singleton
+    fun getRetromock(retromock: Retromock): APIRetromockService {
+        return retromock.create(APIRetromockService::class.java)
+
+    }
+
+    @Provides
+    @Singleton
+    fun buildRetromock(retrofit: Retrofit): Retromock {
+        return Retromock.Builder()
+            .retrofit(retrofit)
+            .defaultBodyFactory(ResourceBodyFactory())
+            .build()
+
     }
 
     // Método que proporciona una instancia de retrofit
     @Provides
     @Singleton
-    fun getRetroInstance(): Retrofit {
+    fun buildRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(URL)
             .addConverterFactory(GsonConverterFactory.create())

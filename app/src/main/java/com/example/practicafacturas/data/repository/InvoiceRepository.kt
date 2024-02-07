@@ -3,6 +3,8 @@ package com.example.practicafacturas.data.repository
 import androidx.lifecycle.LiveData
 import com.example.practicafacturas.data.database.InvoiceDao
 import com.example.practicafacturas.data.database.Invoice
+import com.example.practicafacturas.data.network.APIRetrofitService
+import com.example.practicafacturas.data.network.APIRetromockService
 import com.example.practicafacturas.data.network.model.RepositoriesList
 import com.example.practicafacturas.data.network.RetroServiceInterface
 import retrofit2.Call
@@ -11,9 +13,29 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class InvoiceRepository @Inject constructor(
-    private val retroServiceInterface: RetroServiceInterface,
+
+    private var retrofitService: APIRetrofitService,
+    private var retromockService: APIRetromockService,
     private val invoiceDao: InvoiceDao
 ) {
+    private lateinit var retroServiceInterface: RetroServiceInterface
+    private var datos = "real"
+
+    fun setData(newDatos: String) {
+        datos = newDatos
+        decideService()
+    }
+    init {
+        decideService()
+    }
+
+    fun decideService() {
+        if (datos == "ficticio") {
+            retroServiceInterface = retromockService
+        } else {
+            retroServiceInterface = retrofitService
+        }
+    }
 
     // Método para obtener todas las facturas almacenadas en la BBDD local (room)
     fun getAllInvoicesFromRoom(): LiveData<List<Invoice>> {

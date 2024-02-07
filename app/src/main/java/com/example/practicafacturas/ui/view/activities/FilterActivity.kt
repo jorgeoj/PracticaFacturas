@@ -1,5 +1,6 @@
 package com.example.practicafacturas.ui.view.activities
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -23,6 +24,7 @@ import com.google.gson.Gson
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class FilterActivity : AppCompatActivity() {
@@ -115,9 +117,21 @@ class FilterActivity : AppCompatActivity() {
                 btnDate.text = "$dayOfMonth/${month1 + 1}/$year1"
             }, year, month, day)
 
+        if(binding.btnDateTo.text != getText(R.string.btn_date)) {
+            // Obtener la fecha del texto de btnDateTo y establecerla como fecha máxima
+            val maxDate = getDateFromButtonText(binding.btnDateTo.text.toString())
+            datePickerDialog.datePicker.maxDate = maxDate.time
+        }
+
         // Aplicar restriccion de fecha minima si es necesario
         if(minDateRestriction) { minDate?.let { datePickerDialog.datePicker.minDate = it } }
         datePickerDialog.show()
+    }
+
+    // Función para convertir el texto del botón a una fecha
+    private fun getDateFromButtonText(dateText: String): Date {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        return dateFormat.parse(dateText) ?: Date()
     }
 
 
@@ -202,6 +216,13 @@ class FilterActivity : AppCompatActivity() {
         intent.putExtra("datosFiltro", gson.toJson(filtro))
 
         startActivity(intent)
+
+        // TODO Mirar esto que me dijo Carlos y hacer pruebas
+        /*
+        val intent2 = Intent()
+        intent2.putExtra("datosFiltro", gson.toJson(filtro))
+        setResult(Activity.RESULT_OK, intent2)
+        */
 
         finish()
     }

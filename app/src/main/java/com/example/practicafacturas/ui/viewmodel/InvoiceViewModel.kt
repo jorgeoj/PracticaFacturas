@@ -19,4 +19,8 @@ class InvoiceViewModel @Inject constructor(private val invoiceRepository: Invoic
     fun makeApiCall() {
         invoiceRepository.makeApiCall()
     }
+
+    fun changeService(newData: String) {
+        invoiceRepository.setData(newData)
+    }
 }
