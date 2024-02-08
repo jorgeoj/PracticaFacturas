@@ -13,8 +13,7 @@ interface APIRetromockService: RetroServiceInterface {
     @Mock
     @MockResponses(
         MockResponse(body = "mock.json"),
-        MockResponse(body = "mock2.json"),
-        MockResponse(body = "mock3.json")
+        MockResponse(body = "mock2.json")
     )
     @MockCircular
     @GET("/")
