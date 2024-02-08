@@ -132,9 +132,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.getAllRepositoryList().observe(this) { invoices ->
             handleInvoiceList(invoices)
 
+            // Configura al hacer clic en el switch
             binding.switchRetromock.setOnClickListener {
                 val isChecked = binding.switchRetromock.isChecked
                 guardarEstadoSwitch(isChecked)
+
+                // Depende si esta activado o no le cambiamos el estado para elegir entre retromock o los datos reales
                 if (binding.switchRetromock.isChecked) {
                     viewModel.changeService("ficticio")
                     viewModel.makeApiCall()

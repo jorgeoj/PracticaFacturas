@@ -21,14 +21,17 @@ class InvoiceRepository @Inject constructor(
     private lateinit var retroServiceInterface: RetroServiceInterface
     private var datos = "real"
 
+    // Método para establecer el tipo de datos (real o ficticio) y decidir qué servicio usar
     fun setData(newDatos: String) {
         datos = newDatos
         decideService()
     }
     init {
+        // Llamado al método decideService() en la inicialización de la clase
         decideService()
     }
 
+    // Método para determinar qué servicio utilizar (real o ficticio)
     fun decideService() {
         if (datos == "ficticio") {
             retroServiceInterface = retromockService

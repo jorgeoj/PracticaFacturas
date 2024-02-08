@@ -8,6 +8,7 @@ import com.example.practicafacturas.data.network.model.RepositoriesList
 import retrofit2.Call
 import retrofit2.http.GET
 
+// Interfaz para simular respuestas de la API utilizando Retrofit y herramientas de mock
 interface APIRetromockService: RetroServiceInterface {
     @Mock
     @MockResponses(
@@ -20,6 +21,7 @@ interface APIRetromockService: RetroServiceInterface {
     override fun getDataFromAPI(): Call<RepositoriesList>
 }
 
+// Interfaz para realizar solicitudes reales a la API en producción
 interface APIRetrofitService: RetroServiceInterface {
     @GET("facturas")
     override fun getDataFromAPI(): Call<RepositoriesList>

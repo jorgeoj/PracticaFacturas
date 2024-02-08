@@ -125,6 +125,7 @@ class FilterActivity : AppCompatActivity() {
 
         // Aplicar restriccion de fecha minima si es necesario
         if(minDateRestriction) { minDate?.let { datePickerDialog.datePicker.minDate = it } }
+
         datePickerDialog.show()
     }
 

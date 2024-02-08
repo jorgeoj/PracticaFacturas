@@ -38,7 +38,7 @@ class AppModule {
     // URL para las solicitudes de retrofit
     val URL = "https://viewnextandroid.wiremockapi.cloud/"
 
-    // TODO: volver a comentar esto
+    // Método que proporciona una instancia del servicio Retrofit para la API real
     @Provides
     @Singleton
     fun getRetrofit(retrofit: Retrofit): APIRetrofitService {
@@ -46,6 +46,7 @@ class AppModule {
 
     }
 
+    // Método que proporciona una instancia del servicio de mocking para la API ficticia
     @Provides
     @Singleton
     fun getRetromock(retromock: Retromock): APIRetromockService {
@@ -53,6 +54,7 @@ class AppModule {
 
     }
 
+    // Método que construye e instancia el servicio de mocking Retromock
     @Provides
     @Singleton
     fun buildRetromock(retrofit: Retrofit): Retromock {
@@ -63,7 +65,7 @@ class AppModule {
 
     }
 
-    // Método que proporciona una instancia de retrofit
+    // Método que construye e instancia Retrofit con la URL base y un convertidor Gson
     @Provides
     @Singleton
     fun buildRetrofit(): Retrofit {

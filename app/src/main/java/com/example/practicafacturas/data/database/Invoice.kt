@@ -11,6 +11,4 @@ class Invoice(
     val descEstado: String?,
     val importeOrdenacion: Double?,
     val fecha: String?
-) {
-
-}
+) {}

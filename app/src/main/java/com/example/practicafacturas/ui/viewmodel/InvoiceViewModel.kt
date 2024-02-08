@@ -20,6 +20,7 @@ class InvoiceViewModel @Inject constructor(private val invoiceRepository: Invoic
         invoiceRepository.makeApiCall()
     }
 
+    // Metodo para cambiar entre servicios
     fun changeService(newData: String) {
         invoiceRepository.setData(newData)
     }
